@@ -9,6 +9,7 @@ import com.factory.manual.BaseActivity;
 import com.factory.manual.R;
 import com.factory.manual.adapter.HomeAdapter;
 import com.factory.manual.bean.HomeItem;
+import com.factory.manual.ui.shouce.ModuleOneActivity;
 import com.gyf.barlibrary.ImmersionBar;
 
 import java.util.ArrayList;
@@ -18,7 +19,6 @@ import butterknife.BindView;
 public class MainActivity extends BaseActivity {
     @BindView(R.id.recycle_view)
     RecyclerView recycle_view;
-
 
     @Override
     protected int getLayoutId() {
@@ -55,6 +55,12 @@ public class MainActivity extends BaseActivity {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (adapter.getItem(position) instanceof HomeItem) {
                     HomeItem item = (HomeItem) adapter.getItem(position);
+
+                    switch (item.type) {
+                        case 知识手册:
+                            startActivity(ModuleOneActivity.class);
+                            break;
+                    }
                 }
             }
         });

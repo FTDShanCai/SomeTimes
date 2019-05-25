@@ -44,7 +44,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     protected void initStateBar() {
         mImmersionBar = ImmersionBar.with(this);
         mImmersionBar
-                .statusBarDarkFont(false)   //状态栏字体是深色，不写默认为亮色
+                .statusBarDarkFont(true)   //状态栏字体是深色，不写默认为亮色
                 .keyboardEnable(false)
                 .navigationBarEnable(false);
         mImmersionBar.init();
