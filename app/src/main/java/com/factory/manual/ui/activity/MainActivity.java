@@ -3,6 +3,7 @@ package com.factory.manual.ui.activity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.factory.manual.BaseActivity;
@@ -10,15 +11,21 @@ import com.factory.manual.R;
 import com.factory.manual.adapter.HomeAdapter;
 import com.factory.manual.bean.HomeItem;
 import com.factory.manual.ui.shouce.ModuleOneActivity;
+import com.factory.manual.ui.work.SubmitWorkActivity;
+import com.factory.manual.ui.work.WorkListActivity;
 import com.gyf.barlibrary.ImmersionBar;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.recycle_view)
     RecyclerView recycle_view;
+    @BindView(R.id.tv_peoples)
+    TextView tv_peoples;
+    @BindView(R.id.tv_submit_work)
+    TextView tv_submit_work;
 
     @Override
     protected int getLayoutId() {
@@ -28,6 +35,9 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initView() {
         initDatas();
+
+        tv_peoples.setOnClickListener(this);
+        tv_submit_work.setOnClickListener(this);
     }
 
     @Override
@@ -60,11 +70,26 @@ public class MainActivity extends BaseActivity {
                         case 知识手册:
                             startActivity(ModuleOneActivity.class);
                             break;
+                        case 任务管理:
+                            startActivity(WorkListActivity.class);
+                            break;
                     }
                 }
             }
         });
         recycle_view.setLayoutManager(new GridLayoutManager(this, 2));
         recycle_view.setAdapter(adapter);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_peoples:
+                startActivity(PeoplesActivity.class);
+                break;
+            case R.id.tv_submit_work:
+                startActivity(SubmitWorkActivity.class);
+                break;
+        }
     }
 }

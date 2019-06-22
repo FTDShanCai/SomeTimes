@@ -12,7 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.shouce.ModuleDetailActivity"></activity>
+        <activity android:name=".ui.work.WorkListActivity"></activity>
+        <activity android:name=".ui.work.SubmitWorkActivity" />
+        <activity android:name=".ui.activity.PeoplesActivity" />
+        <activity android:name=".ui.shouce.ModuleDetailActivity" />
         <activity android:name=".ui.shouce.ModuleOneActivity" />
         <activity
             android:name=".ui.activity.MainActivity"

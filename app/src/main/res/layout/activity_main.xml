@@ -91,6 +91,7 @@
                     android:layout_weight="1">
 
                     <TextView
+                        android:id="@+id/tv_submit_work"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -111,6 +112,7 @@
                     android:layout_weight="1">
 
                     <TextView
+                        android:id="@+id/tv_peoples"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"

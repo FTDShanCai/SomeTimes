@@ -3,6 +3,8 @@ package com.factory.manual.ui.shouce;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.ContentLoadingProgressBar;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.factory.manual.BaseActivity;
@@ -21,6 +23,8 @@ public class ModuleDetailActivity extends BaseActivity {
     ContentLoadingProgressBar progress;
     @BindView(R.id.tv_progress)
     TextView tv_progress;
+    @BindView(R.id.btn_next)
+    Button btn_next;
 
     private PagerAdapter adapter;
 
@@ -41,7 +45,7 @@ public class ModuleDetailActivity extends BaseActivity {
         adapter = new PagerAdapter(getSupportFragmentManager(), fragments);
         view_page.setAdapter(adapter);
 
-        progress.setMax(fragments.size() + 1);
+        progress.setMax(fragments.size());
         progress.setProgress(1);
         view_page.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -53,6 +57,12 @@ public class ModuleDetailActivity extends BaseActivity {
             public void onPageSelected(int i) {
                 tv_progress.setText((i + 1) + "/" + fragments.size());
                 progress.setProgress(i + 1);
+
+                if (i == fragments.size() - 1) {
+                    btn_next.setText("完成");
+                } else {
+                    btn_next.setText("下一步");
+                }
             }
 
             @Override
@@ -60,5 +70,26 @@ public class ModuleDetailActivity extends BaseActivity {
 
             }
         });
+
+        btn_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                switch (btn_next.getText().toString()) {
+                    case "下一步":
+                        int item = view_page.getCurrentItem();
+                        item++;
+                        view_page.setCurrentItem(item);
+                        break;
+                    case "完成":
+                        toastMsg("完成");
+                        finish();
+                        break;
+                }
+
+            }
+        });
     }
+
+
 }
