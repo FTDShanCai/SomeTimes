@@ -1,12 +1,16 @@
 package com.factory.manual.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.factory.manual.BaseFragment;
 import com.factory.manual.R;
 import com.factory.manual.adapter.WorkListAdapter;
+import com.factory.manual.ui.work.WorkDetailActivity;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 import java.util.ArrayList;
@@ -32,6 +36,13 @@ public class WorkListFragment extends BaseFragment {
         adapter = new WorkListAdapter();
         recycler_view.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         recycler_view.setAdapter(adapter);
+
+        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(getActivity(), WorkDetailActivity.class));
+            }
+        });
 
         for (int i = 0; i < 20; i++) {
             list.add("");
