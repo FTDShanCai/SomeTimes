@@ -1,11 +1,14 @@
 package com.factory.manual.ui.shouce;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.factory.manual.BaseActivity;
+import com.factory.manual.Contants;
 import com.factory.manual.R;
 import com.factory.manual.adapter.ModuleAdapter;
 import com.factory.manual.api.CMD;
@@ -23,14 +26,20 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 
-public class ModuleOneActivity extends BaseActivity {
+public class ModuleTwoActivity extends BaseActivity {
 
     @BindView(R.id.recycle_view)
     RecyclerView recycler_view;
     @BindView(R.id.refresh_layout)
     SmartRefreshLayout refresh_layout;
-
+    private String categoryId;
     private ModuleAdapter adapter;
+
+    public static void enter(Context context, String categoryId) {
+        Intent intent = new Intent(context, ModuleTwoActivity.class);
+        intent.putExtra(Contants.B_id, categoryId);
+        context.startActivity(intent);
+    }
 
     @Override
     protected int getLayoutId() {
@@ -39,6 +48,7 @@ public class ModuleOneActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        categoryId = getIntent().getStringExtra(Contants.B_id);
         initCommonSearchTitle("输入要搜索的模块名", new OnCommonSearchListener() {
             @Override
             public void onSearch(String query) {
@@ -63,7 +73,7 @@ public class ModuleOneActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 BaseResultBean.DataListBean bean = (BaseResultBean.DataListBean) adapter.getData().get(position);
-                ModuleTwoActivity.enter(ModuleOneActivity.this, bean.getId());
+                ModuleDetailActivity.enter(ModuleTwoActivity.this, bean.getId());
             }
         });
         refresh_layout.setEnableLoadMore(false);
@@ -86,7 +96,8 @@ public class ModuleOneActivity extends BaseActivity {
             page = 1;
         }
         HashMap<String, String> map = new HashMap<>();
-        map.put("cmd", CMD.getCategoryList);
+        map.put("cmd", CMD.getBookList);
+        map.put("categoryId", categoryId);
         map.put("nowPage", page + "");
         map.put("pageCount", pageCount + "");
 

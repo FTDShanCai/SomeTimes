@@ -1,9 +1,9 @@
 package com.factory.manual.ui.activity;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.factory.manual.AppConfig;
 import com.factory.manual.BaseActivity;
 import com.factory.manual.R;
 import com.factory.manual.api.CMD;
@@ -68,13 +68,14 @@ public class LoginActivity extends BaseActivity {
                 .subscribe(new NetObserver<BaseResultBean>() {
                     @Override
                     public void onSuccess(BaseResultBean response) {
-                        Log.d("ftd", response.getResult());
+                        toastMsg("登录成功");
+                        AppConfig.uid = response.getUid();
                         startActivity(MainActivity.class);
                     }
 
                     @Override
                     public void onFail(String msg) {
-                        Log.d("ftd", msg);
+                        toastMsg(msg);
                     }
                 });
 

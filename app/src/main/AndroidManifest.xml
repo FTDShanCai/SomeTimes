@@ -21,6 +21,8 @@
         <activity android:name=".ui.activity.PeoplesActivity" />
         <activity android:name=".ui.shouce.ModuleDetailActivity" />
         <activity android:name=".ui.shouce.ModuleOneActivity" />
+        <activity android:name=".ui.shouce.ModuleTwoActivity" />
+
         <activity
             android:name=".ui.activity.MainActivity"
             android:label="@string/title_activity_main"

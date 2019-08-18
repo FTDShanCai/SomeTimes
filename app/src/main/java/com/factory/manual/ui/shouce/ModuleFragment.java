@@ -5,8 +5,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.factory.manual.BaseFragment;
+import com.factory.manual.Contants;
 import com.factory.manual.R;
 import com.factory.manual.adapter.ImageAdapter;
+import com.factory.manual.bean.BaseResultBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +23,13 @@ import butterknife.BindView;
 public class ModuleFragment extends BaseFragment {
     @BindView(R.id.recycle_view)
     RecyclerView recycle_view;
+
     private ImageAdapter adapter;
     private List<String> list = new ArrayList<>();
 
-    public static ModuleFragment newInstance() {
+    public static ModuleFragment newInstance(BaseResultBean.DataListBean bean) {
         Bundle args = new Bundle();
-
+        args.putSerializable(Contants.B_BEAN, bean);
         ModuleFragment fragment = new ModuleFragment();
         fragment.setArguments(args);
         return fragment;
@@ -37,8 +40,11 @@ public class ModuleFragment extends BaseFragment {
         return R.layout.fragment_module;
     }
 
+    private BaseResultBean.DataListBean bean;
+
     @Override
     protected void initViews(Bundle savedInstanceState) {
+        bean = (BaseResultBean.DataListBean) getArguments().get(Contants.B_BEAN);
         adapter = new ImageAdapter(list);
         recycle_view.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         recycle_view.setAdapter(adapter);
@@ -46,8 +52,8 @@ public class ModuleFragment extends BaseFragment {
 
     @Override
     protected void lazyLoad() {
-        if (list.size() == 0) {
-            list.add("https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1969255128,1774348070&fm=27&gp=0.jpg");
+        if (adapter.getData().size() == 0 && bean.getImages() != null && bean.getImages().size() != 0) {
+            list.addAll(bean.getImages());
             adapter.notifyDataSetChanged();
         }
     }

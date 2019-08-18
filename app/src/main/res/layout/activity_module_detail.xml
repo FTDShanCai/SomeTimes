@@ -25,9 +25,9 @@
         android:padding="15dp">
 
         <TextView
+            android:id="@+id/tv_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:lineSpacingExtra="3dp"
             android:text="1、确认泵体导淋，出口管道导淋、入口管道导淋关闭。"
             android:textColor="@color/black_3"
