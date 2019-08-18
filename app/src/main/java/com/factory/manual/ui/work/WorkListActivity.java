@@ -22,7 +22,7 @@ public class WorkListActivity extends BaseActivity {
     private PagerAdapter adapter;
     private ArrayList<Fragment> fragments = new ArrayList<>();
 
-    private String[] title = {"全部", "进行中", "暂停中", "审批中", "已完成", "已超期", "部门(进行中)", "部门(已完成)"};
+    private String[] title = {"全部", "我发布的", "进行中", "暂停中", "审批中", "已完成", "已超期", "部门(进行中)", "部门(已完成)"};
 
     @Override
     protected int getLayoutId() {

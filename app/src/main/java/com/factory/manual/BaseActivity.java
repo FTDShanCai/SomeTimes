@@ -17,13 +17,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.gyf.barlibrary.ImmersionBar;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import butterknife.ButterKnife;
 
 public abstract class BaseActivity extends RxAppCompatActivity {
-
+    protected Gson gson  = new Gson();
     protected ImmersionBar mImmersionBar;
     private InputMethodManager mInputManager;
     protected abstract int getLayoutId();
