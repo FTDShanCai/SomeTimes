@@ -42,6 +42,7 @@
                     android:text="请选择" />
 
                 <ImageView
+                    android:id="@+id/iv_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -63,6 +64,7 @@
                     android:textSize="15sp" />
 
                 <EditText
+                    android:id="@+id/et_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="45dp"
@@ -88,6 +90,7 @@
                     android:textSize="15sp" />
 
                 <TextView
+                    android:id="@+id/tv_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="45dp"
@@ -113,6 +116,7 @@
                     android:textSize="15sp" />
 
                 <EditText
+                    android:id="@+id/et_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="45dp"
@@ -159,6 +163,7 @@
                     android:layout_weight="1" />
 
                 <ImageView
+                    android:id="@+id/iv_module"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"

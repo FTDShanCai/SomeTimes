@@ -1,11 +1,14 @@
 package com.factory.manual.ui.shouce;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.factory.manual.BaseActivity;
+import com.factory.manual.Contants;
 import com.factory.manual.R;
 import com.factory.manual.adapter.ModuleAdapter;
 import com.factory.manual.api.CMD;
@@ -31,6 +34,12 @@ public class ModuleOneActivity extends BaseActivity {
     SmartRefreshLayout refresh_layout;
 
     private ModuleAdapter adapter;
+
+    public static void enter(Activity context, boolean isGetZiModule) {
+        Intent intent = new Intent(context, ModuleOneActivity.class);
+        intent.putExtra("isSelect", isGetZiModule);
+        context.startActivityForResult(intent, Contants.REQUSET_DEFAULT_CODE);
+    }
 
     @Override
     protected int getLayoutId() {

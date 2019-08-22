@@ -39,4 +39,5 @@ public class Contants {
      */
     public static final int CODE_REFRESH = 168;
 
+    public static String B_State="state";
 }

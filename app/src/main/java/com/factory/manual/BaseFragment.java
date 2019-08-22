@@ -6,15 +6,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.trello.rxlifecycle2.LifecycleProvider;
-import com.trello.rxlifecycle2.android.FragmentEvent;
+import com.google.gson.Gson;
+import com.trello.rxlifecycle2.components.support.RxFragment;
 
 import butterknife.ButterKnife;
 
@@ -23,9 +22,9 @@ import butterknife.ButterKnife;
  * 邮箱: 931952032@qq.com
  * <p>description:
  */
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends RxFragment {
 
-
+    protected  Gson gson = new Gson();
     protected abstract @LayoutRes
     int getLayoutId();
 

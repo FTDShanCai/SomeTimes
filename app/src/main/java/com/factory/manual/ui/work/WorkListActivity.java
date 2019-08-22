@@ -21,8 +21,13 @@ public class WorkListActivity extends BaseActivity {
 
     private PagerAdapter adapter;
     private ArrayList<Fragment> fragments = new ArrayList<>();
+    //1:进行中2:暂停中3:审批中4:已完成5:已超期  空全部
+    //1 操作 2、部分 3、我发布
+
 
     private String[] title = {"全部", "我发布的", "进行中", "暂停中", "审批中", "已完成", "已超期", "部门(进行中)", "部门(已完成)"};
+    private String[] status = {"", "", "1", "2", "3", "4", "5", "1", "4"};
+    private String[] type = {"1", "3", "1", "1", "1", "1", "1", "2", "2"};
 
     @Override
     protected int getLayoutId() {
@@ -32,9 +37,8 @@ public class WorkListActivity extends BaseActivity {
     @Override
     protected void initView() {
         initCommonTitle("工作列表");
-
-        for (String type : title) {
-            fragments.add(WorkListFragment.newInstance(type));
+        for (int i = 0; i < title.length; i++) {
+            fragments.add(WorkListFragment.newInstance(status[i], type[i]));
         }
         adapter = new PagerAdapter(getSupportFragmentManager(), fragments, title);
         view_pager.setAdapter(adapter);

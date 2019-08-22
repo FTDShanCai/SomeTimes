@@ -1,19 +1,29 @@
 package com.factory.manual.ui.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.factory.manual.BaseActivity;
+import com.factory.manual.Contants;
 import com.factory.manual.R;
 import com.factory.manual.adapter.GroupAdapter;
 import com.factory.manual.adapter.PeopleAdapter;
-import com.factory.manual.bean.Group;
-import com.factory.manual.bean.People;
+import com.factory.manual.api.CMD;
+import com.factory.manual.bean.BaseResultBean;
+import com.factory.manual.net.NetObserver;
+import com.factory.manual.net.RetrofitUtil;
+import com.factory.manual.net.RxProgress;
+import com.factory.manual.net.RxSchedulers;
+import com.trello.rxlifecycle2.android.ActivityEvent;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 import butterknife.BindView;
 
@@ -24,21 +34,48 @@ public class PeoplesActivity extends BaseActivity implements BaseQuickAdapter.On
     @BindView(R.id.recycle_peoples)
     RecyclerView recycler_peoples;
 
-    private People people;
-
     private PeopleAdapter peopleAdapter = new PeopleAdapter();
     private GroupAdapter groupAdapter = new GroupAdapter();
+
+    private LinkedList<String> key = new LinkedList<>();
+    private HashMap<String, String> map = new HashMap<>();
+
+    private String parentId = "default";
 
     @Override
     protected int getLayoutId() {
         return R.layout.activity_peoples;
     }
 
+    public static void enter(Context context, String parentId) {
+        if (TextUtils.isEmpty(parentId)) {
+            parentId = "default";
+        }
+        Intent intent = new Intent(context, PeoplesActivity.class);
+        intent.putExtra(Contants.B_id, parentId);
+        context.startActivity(intent);
+    }
+
+    private void getIntentData() {
+        Intent intent = getIntent();
+        if (intent != null) {
+            parentId = intent.getStringExtra(Contants.B_id);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (key.size() == 0) {
+            super.onBackPressed();
+        } else {
+            getData(true);
+        }
+    }
+
     @Override
     protected void initView() {
+        getIntentData();
         initCommonTitle("组织架构");
-        initDatas();
-
         recycler_group.setFocusableInTouchMode(false);
         recycler_group.requestFocus();
         recycler_group.setNestedScrollingEnabled(false);
@@ -54,74 +91,82 @@ public class PeoplesActivity extends BaseActivity implements BaseQuickAdapter.On
 
         peopleAdapter.setOnItemClickListener(this);
         groupAdapter.setOnItemClickListener(this);
+        getData(false);
+    }
 
-        peopleAdapter.setNewData(people.getPeoples());
+    private void getData(boolean isBack) {
 
-        ArrayList<Group> groups = new ArrayList<>();
-        for (People p : people.getPeoples()) {
-            Group group = new Group();
-            group.setGroupName(p.getGroupName());
-            groups.add(group);
+        if (isBack) {
+            parentId = key.getLast();
         }
-        groupAdapter.setNewData(groups);
+        if (!TextUtils.isEmpty(parentId) && !TextUtils.isEmpty(map.get(parentId))) {
+            parseData(map.get(parentId), isBack);
+            return;
+        }
+
+        HashMap<String, String> map = new HashMap<>();
+        map.put("cmd", CMD.getPositionList);
+        if ("default".equals(parentId)) {
+            map.put("parentId", "");
+        } else {
+            map.put("parentId", parentId);
+        }
+        RetrofitUtil.getInstance().getApi()
+                .getData(gson.toJson(map))
+                .compose(RxSchedulers.compose())
+                .compose(RxProgress.compose(this))
+                .compose(bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(new NetObserver<BaseResultBean>() {
+                    @Override
+                    public void onSuccess(BaseResultBean response) {
+                        parseData(response, isBack);
+                    }
+
+                    @Override
+                    public void onFail(String msg) {
+                        toastMsg(msg);
+                    }
+                });
     }
 
-    private void initDatas() {
-
-        people = new People("河南奇德网络有限公司", "奇德");
-
-        People people1_1 = new People("供应中心", "刘聪");
-        People people1_1_1 = new People("油品部", "常青");
-        People people1_1_2 = new People("金融保险部", "王海玲");
-        People people1_1_3 = new People("旅游资源部", "陈凯亮");
-        people1_1.setPeoples(initList(people1_1_1, people1_1_2, people1_1_3));
-
-        People people1_2 = new People("营销中心", "杨小书");
-        People people1_2_1 = new People("十八地市分公司", "杨晓");
-        People people1_2_2 = new People("营销管理中心", "刘德华");
-        people1_2.setPeoples(initList(people1_2_1, people1_2_2));
-
-        People people1_3 = new People("互联网中心", "张刘林");
-        People people1_3_1 = new People("产品部", "路飞1");
-        People people1_3_2 = new People("产品部", "路飞2");
-        People people1_3_3 = new People("产品部", "路飞3");
-        People people1_3_4 = new People("产品部", "路飞4");
-        People people1_3_5 = new People("产品部", "路飞5");
-
-        People people1_3_6 = new People("设计部", "索隆1");
-        People people1_3_7 = new People("设计部", "索隆2");
-        People people1_3_8 = new People("设计部", "索隆3");
-        People people1_3_9 = new People("设计部", "索隆4");
-        People people1_3_10 = new People("设计部", "索隆5");
-
-        People people1_3_11 = new People("运营中心", "山治1");
-        People people1_3_12 = new People("运营中心", "山治2");
-        People people1_3_13 = new People("运营中心", "山治3");
-
-        people1_3.setPeoples(initList(people1_3_1, people1_3_2, people1_3_3, people1_3_4, people1_3_5, people1_3_6, people1_3_7
-                , people1_3_8, people1_3_9, people1_3_10, people1_3_11, people1_3_12, people1_3_13));
-
-        people.setPeoples(initList(people1_1, people1_2, people1_3));
+    private void parseData(String json, boolean isBack) {
+        BaseResultBean bean = gson.fromJson(json, BaseResultBean.class);
+        parseData(bean, isBack);
     }
 
-    private ArrayList<People> initList(People... datas) {
-        ArrayList<People> peoples = new ArrayList<>();
-        peoples.addAll(Arrays.asList(datas));
-        return peoples;
+
+    private void parseData(BaseResultBean bean, boolean isBack) {
+        if (bean == null) return;
+        if (!isBack) {
+            if (!TextUtils.isEmpty(parentId)) {
+                map.put(parentId, gson.toJson(bean));
+                key.add(parentId);
+            }
+        } else {
+            if (key.size() != 0) {
+                key.removeLast();
+            }
+        }
+
+        ArrayList<BaseResultBean.DataListBean> dataListBeans = bean.getDataList();
+        ArrayList<BaseResultBean.List> lists = bean.getList();
+        peopleAdapter.setNewData(dataListBeans);
+        groupAdapter.setNewData(lists);
     }
+
 
     @Override
     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
         Object data = adapter.getData().get(position);
-        if (data instanceof People) {
-//            People people = (People) data;
+        if (data instanceof BaseResultBean.DataListBean) {
+            BaseResultBean.DataListBean people = (BaseResultBean.DataListBean) data;
+            toastMsg(people.getNickName());
         }
 
-        if (data instanceof Group) {
-//            Group group = (Group) data;
-//            if (group.getPeoples() != null && group.getPeoples().size() != 0)
-//                peopleAdapter.setNewData(group.getPeoples());
+        if (data instanceof BaseResultBean.List) {
+            BaseResultBean.List group = (BaseResultBean.List) data;
+            parentId = group.getId();
+            getData(false);
         }
-
     }
 }

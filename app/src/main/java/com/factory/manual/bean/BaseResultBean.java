@@ -8,7 +8,16 @@ public class BaseResultBean implements Serializable {
     private String resultNote;
     private int totalPage;
     private ArrayList<DataListBean> dataList;
+    private ArrayList<List> list;
     private String uid;
+
+    public ArrayList<List> getList() {
+        return list;
+    }
+
+    public void setList(ArrayList<List> list) {
+        this.list = list;
+    }
 
     public int getTotalPage() {
         return totalPage;
@@ -50,13 +59,67 @@ public class BaseResultBean implements Serializable {
         this.uid = uid;
     }
 
-    public static class DataListBean implements Serializable{
+    public static class DataListBean implements Serializable {
         private String id;
         private String image;
         private String name;
         private ArrayList<String> images;
         private String title;
         private String url;
+        private String nickName;
+        private String position;
+        private String parentId;
+        private String flag;//1主管
+        private String content;
+        private String status;
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public String getFlag() {
+            return flag;
+        }
+
+        public void setFlag(String flag) {
+            this.flag = flag;
+        }
+
+        public String getNickName() {
+            return nickName;
+        }
+
+        public void setNickName(String nickName) {
+            this.nickName = nickName;
+        }
+
+        public String getPosition() {
+            return position;
+        }
+
+        public void setPosition(String position) {
+            this.position = position;
+        }
+
+        public String getParentId() {
+            return parentId;
+        }
+
+        public void setParentId(String parentId) {
+            this.parentId = parentId;
+        }
 
         public String getTitle() {
             return title;
@@ -96,6 +159,27 @@ public class BaseResultBean implements Serializable {
 
         public void setImage(String image) {
             this.image = image;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
+    public static class List implements Serializable {
+        private String id;
+        private String name;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
         }
 
         public String getName() {
