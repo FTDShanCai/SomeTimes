@@ -2,10 +2,12 @@ package com.factory.manual.ui.activity;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.factory.manual.AppConfig;
 import com.factory.manual.BaseActivity;
 import com.factory.manual.R;
 import com.factory.manual.adapter.HomeAdapter;
@@ -88,6 +90,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 PeoplesActivity.enter(this, "");
                 break;
             case R.id.tv_submit_work:
+                if (TextUtils.isEmpty(AppConfig.parentid)) {
+                    toastMsg("您还没有发布任务的权限");
+                    return;
+                }
                 startActivity(SubmitWorkActivity.class);
                 break;
         }
