@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="@color/grey_f5"
     android:orientation="vertical"
     tools:context=".ui.shouce.ModuleDetailActivity">
@@ -24,9 +25,9 @@
         android:padding="15dp">
 
         <TextView
+            android:id="@+id/tv_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:lineSpacingExtra="3dp"
             android:text="1、确认泵体导淋，出口管道导淋、入口管道导淋关闭。"
             android:textColor="@color/black_3"
@@ -40,10 +41,10 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/btn_next"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/pink"
-                android:enabled="false"
                 android:paddingLeft="18dp"
                 android:paddingTop="6dp"
                 android:paddingRight="18dp"
