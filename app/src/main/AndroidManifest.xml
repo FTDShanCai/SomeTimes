@@ -4,7 +4,9 @@
     package="com.factory.manual">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 写SD卡权限 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 文件目录管理 -->
+    <uses-permission android:name="android.permission.CAMERA" />
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -15,27 +17,37 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.work.WorkDetailActivity"></activity>
-        <activity android:name=".ui.work.WorkListActivity" />
-        <activity android:name=".ui.work.SubmitWorkActivity">
+        <activity android:name=".ui.work.WorkErrActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.work.WorkDetailActivity" />
+        <activity android:name=".ui.work.WorkListActivity" />
+        <activity android:name=".ui.work.SubmitWorkActivity">
+
+        </activity>
         <activity android:name=".ui.activity.PeoplesActivity" />
         <activity android:name=".ui.shouce.ModuleDetailActivity" />
         <activity android:name=".ui.shouce.ModuleOneActivity" />
         <activity android:name=".ui.shouce.ModuleTwoActivity" />
-
         <activity
             android:name=".ui.activity.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.activity.LoginActivity">
+        <activity android:name=".ui.activity.LoginActivity"></activity>
 
-        </activity>
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths_my" />
+        </provider>
     </application>
 
 </manifest>
