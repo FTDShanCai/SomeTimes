@@ -35,7 +35,7 @@ public class CommentUpLoadImageAdapter extends BaseQuickAdapter<UpLoadImage, Bas
         ImageView iv_delete = helper.getView(R.id.iv_delete);
         if (img_width == 0) {
             int screenWidth = AppUtil.getScreenWidth(mContext);
-            img_width = (screenWidth - AppUtil.dip2px(mContext, 20)) / 4 - AppUtil.dip2px(mContext, 15);
+            img_width = (screenWidth - AppUtil.dip2px(mContext, 20)) / 3 - AppUtil.dip2px(mContext, 15);
         }
 
         iv_img.getLayoutParams().width = img_width;
