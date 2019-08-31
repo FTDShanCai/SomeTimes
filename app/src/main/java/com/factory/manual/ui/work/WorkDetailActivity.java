@@ -77,6 +77,7 @@ public class WorkDetailActivity extends BaseActivity {
     protected void initView() {
         initCommonTitle("工作详情");
         getIntentData();
+        recycleView.setFocusable(false);
         recycleView.setNestedScrollingEnabled(false);
         recycleView.setFocusableInTouchMode(false);
         recycleView.requestFocus();

@@ -19,15 +19,19 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".ui.work.ApplyDetailActivity"></activity>
-        <activity android:name=".ui.work.ApplyActivity" />
+        <activity android:name=".ui.work.ApplyActivity" >
+
+        </activity>
         <activity android:name=".ui.work.WorkErrActivity">
+
+        </activity>
+        <activity android:name=".ui.work.WorkDetailActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.work.WorkDetailActivity" />
         <activity android:name=".ui.work.WorkListActivity" />
         <activity android:name=".ui.work.SubmitWorkActivity" />
         <activity android:name=".ui.activity.PeoplesActivity" />

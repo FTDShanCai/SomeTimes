@@ -9,7 +9,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.factory.manual.R;
 import com.factory.manual.bean.BaseResultBean;
-import com.scwang.smartrefresh.header.material.CircleImageView;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class ApplyAdater extends BaseQuickAdapter<BaseResultBean.DataListBean, BaseViewHolder> {

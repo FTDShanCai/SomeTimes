@@ -13,13 +13,16 @@
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:layout_height="0dp"
         android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="20dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -46,10 +49,10 @@
                     android:background="@color/grey_eb" />
 
                 <TextView
+                    android:id="@+id/tv_state"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:id="@+id/tv_state"
                     android:gravity="center"
                     android:text="已完成"
                     android:textColor="@color/orange"
@@ -93,10 +96,10 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/tv_peoples"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
-                            android:id="@+id/tv_peoples"
                             android:lineSpacingExtra="5dp"
                             android:text="张三"
                             android:textColor="@color/black_3"
@@ -117,8 +120,8 @@
                             android:textSize="14sp" />
 
                         <TextView
-                            android:layout_width="match_parent"
                             android:id="@+id/tv_address"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
                             android:lineSpacingExtra="5dp"
@@ -141,9 +144,9 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/tv_publish_date"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/tv_publish_date"
                             android:layout_marginLeft="20dp"
                             android:lineSpacingExtra="5dp"
                             android:text="2019年6月22日 18:11:31"
@@ -165,13 +168,13 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/tv_task_end_date"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
                             android:lineSpacingExtra="5dp"
                             android:text="2019年6月22日 18:11:31"
                             android:textColor="@color/black_3"
-                            android:id="@+id/tv_task_end_date"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -189,10 +192,10 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/tv_content"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
-                            android:id="@+id/tv_content"
                             android:lineSpacingExtra="5dp"
                             android:text="局内旧设备检修，进行统计换新工作。"
                             android:textColor="@color/black_3"
@@ -223,11 +226,11 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/tv_now_count"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="当前进度(9/9)"
-                            android:id="@+id/tv_now_count"
                             android:textColor="@color/black_3"
                             android:textSize="15sp"
                             android:textStyle="bold" />
@@ -247,7 +250,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:max="9"
-                        android:progress="9" />
+                        android:progress="1" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -279,9 +282,7 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_margin="10dp"
                 app:cardCornerRadius="8dp">
 
                 <LinearLayout
@@ -289,11 +290,12 @@
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:orientation="vertical"
-                    android:padding="15dp">
+                    android:paddingBottom="10dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:padding="15dp"
                         android:text="工作记录"
                         android:textColor="@color/black_3"
                         android:textSize="15sp"
@@ -303,10 +305,10 @@
                         android:id="@+id/recycle_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
                         tools:itemCount="2" />
 
                 </LinearLayout>
+
 
             </android.support.v7.widget.CardView>
         </LinearLayout>
@@ -333,10 +335,10 @@
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:gravity="center"
-                android:padding="20dp"
+                android:padding="15dp"
                 android:text="开始工作"
                 android:textColor="@color/green"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -345,10 +347,10 @@
                 android:layout_weight="1"
                 android:background="@color/green"
                 android:gravity="center"
-                android:padding="20dp"
+                android:padding="15dp"
                 android:text="异常上报"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
 
         </LinearLayout>

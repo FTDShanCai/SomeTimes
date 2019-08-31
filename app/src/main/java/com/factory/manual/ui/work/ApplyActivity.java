@@ -47,6 +47,7 @@ public class ApplyActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 BaseResultBean.DataListBean bean = (BaseResultBean.DataListBean) adapter.getData().get(position);
+                ApplyDetailActivity.enter(ApplyActivity.this);
             }
         });
         refresh_layout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
@@ -61,8 +62,12 @@ public class ApplyActivity extends BaseActivity {
             }
         });
         refresh_layout.setEnableLoadMore(false);
-        refresh_layout.autoRefresh();
-
+//        refresh_layout.autoRefresh();
+        ArrayList<BaseResultBean.DataListBean> dataListBeans = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            dataListBeans.add(new BaseResultBean.DataListBean());
+        }
+        adapter.setNewData(dataListBeans);
     }
 
     private int page = 1;
