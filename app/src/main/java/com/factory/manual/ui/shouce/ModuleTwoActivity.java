@@ -1,5 +1,6 @@
 package com.factory.manual.ui.shouce;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.GridLayoutManager;
@@ -34,11 +35,13 @@ public class ModuleTwoActivity extends BaseActivity {
     SmartRefreshLayout refresh_layout;
     private String categoryId;
     private ModuleAdapter adapter;
+    private boolean isSelect;
 
-    public static void enter(Context context, String categoryId) {
+    public static void enter(Activity context, String categoryId, boolean isSelect) {
         Intent intent = new Intent(context, ModuleTwoActivity.class);
         intent.putExtra(Contants.B_id, categoryId);
-        context.startActivity(intent);
+        intent.putExtra("isSelect", isSelect);
+        context.startActivityForResult(intent, Contants.REQUSET_DEFAULT_CODE);
     }
 
     @Override
@@ -48,7 +51,11 @@ public class ModuleTwoActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        categoryId = getIntent().getStringExtra(Contants.B_id);
+        Intent intent = getIntent();
+        if (intent != null) {
+            categoryId = intent.getStringExtra(Contants.B_id);
+            isSelect = intent.getBooleanExtra("isSelect", false);
+        }
         initCommonSearchTitle("输入要搜索的模块名", new OnCommonSearchListener() {
             @Override
             public void onSearch(String query) {
@@ -73,7 +80,15 @@ public class ModuleTwoActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 BaseResultBean.DataListBean bean = (BaseResultBean.DataListBean) adapter.getData().get(position);
-                ModuleDetailActivity.enter(ModuleTwoActivity.this, bean.getId());
+                if (isSelect) {
+                    Intent data = new Intent();
+                    data.putExtra(Contants.B_id, bean.getId());
+                    data.putExtra(Contants.B_NAME, bean.getName());
+                    setResult(Contants.CODE_REFRESH, data);
+                    finish();
+                } else {
+                    ModuleDetailActivity.enter(ModuleTwoActivity.this, bean.getId());
+                }
             }
         });
         refresh_layout.setEnableLoadMore(false);

@@ -1,5 +1,6 @@
 package com.factory.manual.ui.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
@@ -42,12 +43,14 @@ public class PeoplesActivity extends BaseActivity implements BaseQuickAdapter.On
 
     private String parentId = "default";
 
+    private boolean isSelect = false;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_peoples;
     }
 
-    public static void enter(Context context, String parentId) {
+    public static void enter(Activity context, String parentId) {
         if (TextUtils.isEmpty(parentId)) {
             parentId = "default";
         }
@@ -56,10 +59,21 @@ public class PeoplesActivity extends BaseActivity implements BaseQuickAdapter.On
         context.startActivity(intent);
     }
 
+    public static void enter(Activity context, String parentId, boolean isSelect) {
+        if (TextUtils.isEmpty(parentId)) {
+            parentId = "default";
+        }
+        Intent intent = new Intent(context, PeoplesActivity.class);
+        intent.putExtra(Contants.B_id, parentId);
+        intent.putExtra("isSelect", isSelect);
+        context.startActivityForResult(intent, Contants.REQUSET_DEFAULT_CODE_101);
+    }
+
     private void getIntentData() {
         Intent intent = getIntent();
         if (intent != null) {
             parentId = intent.getStringExtra(Contants.B_id);
+            isSelect = intent.getBooleanExtra("isSelect", false);
         }
     }
 
@@ -160,7 +174,15 @@ public class PeoplesActivity extends BaseActivity implements BaseQuickAdapter.On
         Object data = adapter.getData().get(position);
         if (data instanceof BaseResultBean.DataListBean) {
             BaseResultBean.DataListBean people = (BaseResultBean.DataListBean) data;
-            toastMsg(people.getNickName());
+            if (isSelect) {
+                Intent intent = new Intent();
+                intent.putExtra(Contants.B_id, people.getId());
+                intent.putExtra(Contants.B_NAME, people.getNickName());
+                setResult(Contants.CODE_REFRESH, intent);
+                finish();
+            } else {
+                toastMsg(people.getNickName());
+            }
         }
 
         if (data instanceof BaseResultBean.List) {

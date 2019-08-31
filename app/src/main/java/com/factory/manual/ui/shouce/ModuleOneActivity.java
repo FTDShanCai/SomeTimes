@@ -2,8 +2,10 @@ package com.factory.manual.ui.shouce;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -33,6 +35,8 @@ public class ModuleOneActivity extends BaseActivity {
     @BindView(R.id.refresh_layout)
     SmartRefreshLayout refresh_layout;
 
+    private boolean isSelect;
+
     private ModuleAdapter adapter;
 
     public static void enter(Activity context, boolean isGetZiModule) {
@@ -48,20 +52,15 @@ public class ModuleOneActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            isSelect = intent.getBooleanExtra("isSelect", false);
+        }
         initCommonSearchTitle("输入要搜索的模块名", new OnCommonSearchListener() {
             @Override
             public void onSearch(String query) {
 
-            }
-        });
-        adapter = new ModuleAdapter();
-        recycler_view.setLayoutManager(new GridLayoutManager(this, 2));
-        recycler_view.setAdapter(adapter);
-        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                BaseResultBean.DataListBean bean = (BaseResultBean.DataListBean) adapter.getData().get(position);
-                ModuleTwoActivity.enter(ModuleOneActivity.this, bean.getId());
             }
         });
         refresh_layout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
@@ -73,6 +72,16 @@ public class ModuleOneActivity extends BaseActivity {
             @Override
             public void onRefresh(RefreshLayout refreshLayout) {
                 getList(true);
+            }
+        });
+        adapter = new ModuleAdapter();
+        recycler_view.setLayoutManager(new GridLayoutManager(this, 2));
+        recycler_view.setAdapter(adapter);
+        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                BaseResultBean.DataListBean bean = (BaseResultBean.DataListBean) adapter.getData().get(position);
+                ModuleTwoActivity.enter(ModuleOneActivity.this, bean.getId(), isSelect);
             }
         });
         refresh_layout.setEnableLoadMore(false);
@@ -127,7 +136,17 @@ public class ModuleOneActivity extends BaseActivity {
                         toastMsg(msg);
                     }
                 });
-
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Contants.REQUSET_DEFAULT_CODE && resultCode == Contants.CODE_REFRESH && data != null) {
+            String id = data.getStringExtra(Contants.B_id);
+            if (TextUtils.isEmpty(id) && isSelect) {
+                setResult(Contants.CODE_REFRESH, data);
+                finish();
+            }
+        }
+    }
 }
