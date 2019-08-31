@@ -29,6 +29,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/tv_task_title"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -48,6 +49,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:id="@+id/tv_state"
                     android:gravity="center"
                     android:text="已完成"
                     android:textColor="@color/orange"
@@ -94,6 +96,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
+                            android:id="@+id/tv_peoples"
                             android:lineSpacingExtra="5dp"
                             android:text="张三"
                             android:textColor="@color/black_3"
@@ -115,6 +118,7 @@
 
                         <TextView
                             android:layout_width="match_parent"
+                            android:id="@+id/tv_address"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
                             android:lineSpacingExtra="5dp"
@@ -139,6 +143,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:id="@+id/tv_publish_date"
                             android:layout_marginLeft="20dp"
                             android:lineSpacingExtra="5dp"
                             android:text="2019年6月22日 18:11:31"
@@ -166,6 +171,7 @@
                             android:lineSpacingExtra="5dp"
                             android:text="2019年6月22日 18:11:31"
                             android:textColor="@color/black_3"
+                            android:id="@+id/tv_task_end_date"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -186,6 +192,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
+                            android:id="@+id/tv_content"
                             android:lineSpacingExtra="5dp"
                             android:text="局内旧设备检修，进行统计换新工作。"
                             android:textColor="@color/black_3"
@@ -220,11 +227,13 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="当前进度(9/9)"
+                            android:id="@+id/tv_now_count"
                             android:textColor="@color/black_3"
                             android:textSize="15sp"
                             android:textStyle="bold" />
 
                         <ImageView
+                            android:id="@+id/iv_book"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_book_black_24dp" />
@@ -232,6 +241,7 @@
                     </LinearLayout>
 
                     <ProgressBar
+                        android:id="@+id/progress"
                         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -253,6 +263,7 @@
                             android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/tv_end_date"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"

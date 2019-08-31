@@ -20,6 +20,8 @@ import com.factory.manual.net.RetrofitUtil;
 import com.factory.manual.net.RxSchedulers;
 import com.factory.manual.ui.work.WorkDetailActivity;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 
 import java.util.ArrayList;
@@ -61,7 +63,18 @@ public class WorkListFragment extends BaseFragment {
                 WorkDetailActivity.enter(WorkListFragment.this, bean.getId());
             }
         });
+        refresh_layout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+            @Override
+            public void onLoadMore(RefreshLayout refreshLayout) {
+                getList(false);
+            }
 
+            @Override
+            public void onRefresh(RefreshLayout refreshLayout) {
+                getList(true);
+            }
+        });
+        refresh_layout.setEnableLoadMore(false);
     }
 
     @SuppressLint("CheckResult")
@@ -109,6 +122,8 @@ public class WorkListFragment extends BaseFragment {
         map.put("uid", AppConfig.uid);
         map.put("status", status);//1:进行中2:暂停中3:审批中4:已完成5:已超期  空全部
         map.put("type", type);//1 操作 2、部分 3、我发布
+        map.put("nowPage", page + "");
+        map.put("pageCount", pageCount + "");
 
         RetrofitUtil.getInstance().getApi().getData(gson.toJson(map))
                 .compose(RxSchedulers.compose())

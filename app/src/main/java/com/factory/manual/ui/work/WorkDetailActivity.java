@@ -3,10 +3,16 @@ package com.factory.manual.ui.work;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.factory.manual.BaseActivity;
 import com.factory.manual.Contants;
 import com.factory.manual.R;
+import com.factory.manual.adapter.RecordAdapter;
 import com.factory.manual.api.CMD;
 import com.factory.manual.bean.BaseResultBean;
 import com.factory.manual.net.NetObserver;
@@ -15,11 +21,40 @@ import com.factory.manual.net.RxProgress;
 import com.factory.manual.net.RxSchedulers;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+
+import butterknife.BindView;
 
 public class WorkDetailActivity extends BaseActivity {
 
+    @BindView(R.id.tv_state)
+    TextView tvState;
+    @BindView(R.id.tv_peoples)
+    TextView tvPeoples;
+    @BindView(R.id.tv_address)
+    TextView tvAddress;
+    @BindView(R.id.tv_publish_date)
+    TextView tvPublishDate;
+    @BindView(R.id.tv_task_end_date)
+    TextView tvTaskEndDate;
+    @BindView(R.id.tv_content)
+    TextView tvContent;
+    @BindView(R.id.tv_now_count)
+    TextView tvNowCount;
+    @BindView(R.id.iv_book)
+    ImageView ivBook;
+    @BindView(R.id.progress)
+    ProgressBar progress;
+    @BindView(R.id.tv_end_date)
+    TextView tvEndDate;
+    @BindView(R.id.recycle_view)
+    RecyclerView recycleView;
+    @BindView(R.id.tv_task_title)
+    TextView tv_task_title;
     private String id;
+
+    private RecordAdapter adapter = new RecordAdapter();
 
     public static void enter(Fragment fragment, String id) {
         Intent intent = new Intent(fragment.getActivity(), WorkDetailActivity.class);
@@ -42,6 +77,16 @@ public class WorkDetailActivity extends BaseActivity {
     protected void initView() {
         initCommonTitle("工作详情");
         getIntentData();
+        recycleView.setNestedScrollingEnabled(false);
+        recycleView.setFocusableInTouchMode(false);
+        recycleView.requestFocus();
+        recycleView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recycleView.setAdapter(adapter);
+        ArrayList<String> strings = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            strings.add("");
+        }
+        adapter.setNewData(strings);
         getData();
     }
 
@@ -64,6 +109,7 @@ public class WorkDetailActivity extends BaseActivity {
                 .subscribe(new NetObserver<BaseResultBean>() {
                     @Override
                     public void onSuccess(BaseResultBean response) {
+                        setDetail(response);
                     }
 
                     @Override
@@ -72,4 +118,19 @@ public class WorkDetailActivity extends BaseActivity {
                     }
                 });
     }
+
+    private void setDetail(BaseResultBean bean) {
+        tv_task_title.setText(bean.getTitle());
+        tvState.setText(bean.getStatus());
+//        tvPeoples.setText();
+        tvAddress.setText(bean.getAddress());
+        tvPublishDate.setText(bean.getTime());
+        tvTaskEndDate.setText(bean.getEndTime());
+        tvContent.setText(bean.getContent());
+        progress.setMax(Integer.parseInt(bean.getNumber()));
+        progress.setProgress(Integer.parseInt(bean.getNum()));
+//        tvEndDate.setText();
+    }
+
+    
 }

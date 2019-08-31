@@ -54,6 +54,16 @@ public class ModuleOneActivity extends BaseActivity {
 
             }
         });
+        adapter = new ModuleAdapter();
+        recycler_view.setLayoutManager(new GridLayoutManager(this, 2));
+        recycler_view.setAdapter(adapter);
+        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                BaseResultBean.DataListBean bean = (BaseResultBean.DataListBean) adapter.getData().get(position);
+                ModuleTwoActivity.enter(ModuleOneActivity.this, bean.getId());
+            }
+        });
         refresh_layout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
             public void onLoadMore(RefreshLayout refreshLayout) {
@@ -63,16 +73,6 @@ public class ModuleOneActivity extends BaseActivity {
             @Override
             public void onRefresh(RefreshLayout refreshLayout) {
                 getList(true);
-            }
-        });
-        adapter = new ModuleAdapter();
-        recycler_view.setLayoutManager(new GridLayoutManager(this, 2));
-        recycler_view.setAdapter(adapter);
-        adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                BaseResultBean.DataListBean bean = (BaseResultBean.DataListBean) adapter.getData().get(position);
-                ModuleTwoActivity.enter(ModuleOneActivity.this, bean.getId());
             }
         });
         refresh_layout.setEnableLoadMore(false);

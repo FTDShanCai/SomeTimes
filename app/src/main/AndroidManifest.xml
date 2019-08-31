@@ -20,7 +20,13 @@
         <activity android:name=".ui.work.SubmitWorkActivity" />
         <activity android:name=".ui.activity.PeoplesActivity" />
         <activity android:name=".ui.shouce.ModuleDetailActivity" />
-        <activity android:name=".ui.shouce.ModuleOneActivity" />
+        <activity android:name=".ui.shouce.ModuleOneActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.shouce.ModuleTwoActivity" />
 
         <activity
@@ -28,11 +34,6 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.activity.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
