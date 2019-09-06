@@ -80,7 +80,7 @@ public class CommentUpLoadImageAdapter extends BaseQuickAdapter<UpLoadImage, Bas
             for (UpLoadImage image :
                     loadImages) {
                 sb.append(image.getUploadurl());
-                sb.append(",");
+                sb.append("|");
             }
             return sb.toString();
         }

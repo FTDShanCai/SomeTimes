@@ -14,7 +14,7 @@ public class BaseResultBean implements Serializable {
     private String address;
     private String time;
     private String title;
-    private String status;
+    private String status;//1:进行中2:暂停中3:审批中4:已完成5:已超期6:异常(已完成)7：部门（已完成）
     private String endTime;
     private String content;
     private String number;
@@ -152,7 +152,7 @@ public class BaseResultBean implements Serializable {
         private String parentId;
         private String flag;//1主管
         private String content;
-        private String status;
+        private String status;//1：未开始2:已完成3：暂停4：重启5：上报6：审批成功7：审批失败8：异常9：异常回退10：异常结束11:已转交
 
         public String getContent() {
             return content;

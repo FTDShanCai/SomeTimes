@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.factory.manual.AppConfig;
 import com.factory.manual.BaseActivity;
 import com.factory.manual.Contants;
 import com.factory.manual.R;
@@ -54,6 +55,7 @@ public class ModuleDetailActivity extends BaseActivity implements View.OnClickLi
 
     private boolean isWork = false;
     private int workCount = -1;
+    private String taskId = "";
 
     public static void enter(Context context, String id) {
         Intent intent = new Intent(context, ModuleDetailActivity.class);
@@ -61,11 +63,12 @@ public class ModuleDetailActivity extends BaseActivity implements View.OnClickLi
         context.startActivity(intent);
     }
 
-    public static void enter(Activity context, String id, int count) {
+    public static void enter(Activity context, String id, int count, String taskId) {
         Intent intent = new Intent(context, ModuleDetailActivity.class);
         intent.putExtra(Contants.B_id, id);
         intent.putExtra(Contants.B_Count, count);
         intent.putExtra(Contants.B_State, true);
+        intent.putExtra(Contants.B_Task_Id, taskId);
         context.startActivityForResult(intent, Contants.REQUSET_DEFAULT_CODE);
     }
 
@@ -79,6 +82,8 @@ public class ModuleDetailActivity extends BaseActivity implements View.OnClickLi
         bookid = getIntent().getStringExtra(Contants.B_id);
         workCount = getIntent().getIntExtra(Contants.B_Count, -1);
         isWork = getIntent().getBooleanExtra(Contants.B_State, false);
+        taskId = getIntent().getStringExtra(Contants.B_Task_Id);
+
         initCommonTitle("模块详情");
         btn_next.setVisibility(View.GONE);
 
@@ -196,15 +201,10 @@ public class ModuleDetailActivity extends BaseActivity implements View.OnClickLi
     private void onBtnCLick() {
         switch (btn_next.getText().toString()) {
             case "下一步":
-                int item = view_page.getCurrentItem();
-                item++;
-                view_page.setCurrentItem(item);
-                setResult(Contants.CODE_REFRESH);
+                next();
                 break;
             case "完成":
-                toastMsg("完成");
-                setResult(Contants.CODE_REFRESH);
-                finish();
+                taskFinish();
                 break;
         }
     }
@@ -224,5 +224,56 @@ public class ModuleDetailActivity extends BaseActivity implements View.OnClickLi
     @Override
     public void onPageScrollStateChanged(int i) {
 
+    }
+
+    private void next() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("cmd", CMD.next);
+        map.put("id", taskId);
+        map.put("uid", AppConfig.uid);
+        RetrofitUtil.getInstance().getApi()
+                .getData(gson.toJson(map))
+                .compose(RxSchedulers.compose())
+                .compose(RxProgress.compose(this))
+                .compose(bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(new NetObserver<BaseResultBean>() {
+                    @Override
+                    public void onSuccess(BaseResultBean response) {
+                        int item = view_page.getCurrentItem();
+                        item++;
+                        view_page.setCurrentItem(item);
+                        setResult(Contants.CODE_REFRESH);
+                    }
+
+                    @Override
+                    public void onFail(String msg) {
+                        toastMsg(msg);
+                    }
+                });
+    }
+
+
+    private void taskFinish() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("cmd", CMD.next);
+        map.put("id", taskId);
+        map.put("uid", AppConfig.uid);
+        RetrofitUtil.getInstance().getApi()
+                .getData(gson.toJson(map))
+                .compose(RxSchedulers.compose())
+                .compose(RxProgress.compose(this))
+                .compose(bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(new NetObserver<BaseResultBean>() {
+                    @Override
+                    public void onSuccess(BaseResultBean response) {
+                        setResult(Contants.CODE_REFRESH);
+                        finish();
+                    }
+
+                    @Override
+                    public void onFail(String msg) {
+                        toastMsg(msg);
+                    }
+                });
     }
 }

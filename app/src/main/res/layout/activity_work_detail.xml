@@ -37,7 +37,6 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="气象局设备检修"
                     android:textColor="@color/black_3"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -54,7 +53,6 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="已完成"
                     android:textColor="@color/orange"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -101,7 +99,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
                             android:lineSpacingExtra="5dp"
-                            android:text="张三"
                             android:textColor="@color/black_3"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -125,7 +122,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
                             android:lineSpacingExtra="5dp"
-                            android:text="郑州市郑东新区CBD商务西二街 新芒果大厦25楼"
                             android:textColor="@color/black_3"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -149,7 +145,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
                             android:lineSpacingExtra="5dp"
-                            android:text="2019年6月22日 18:11:31"
                             android:textColor="@color/black_3"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -173,7 +168,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
                             android:lineSpacingExtra="5dp"
-                            android:text="2019年6月22日 18:11:31"
                             android:textColor="@color/black_3"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -197,7 +191,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
                             android:lineSpacingExtra="5dp"
-                            android:text="局内旧设备检修，进行统计换新工作。"
                             android:textColor="@color/black_3"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -230,7 +223,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="当前进度(9/9)"
+                            android:text="当前进度"
                             android:textColor="@color/black_3"
                             android:textSize="15sp"
                             android:textStyle="bold" />
@@ -271,7 +264,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
                             android:lineSpacingExtra="5dp"
-                            android:text="2019年6月22日 18:11:31"
                             android:textColor="@color/black_3"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -305,6 +297,7 @@
                         android:id="@+id/recycle_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        tools:listitem="@layout/item_record"
                         tools:itemCount="2" />
 
                 </LinearLayout>

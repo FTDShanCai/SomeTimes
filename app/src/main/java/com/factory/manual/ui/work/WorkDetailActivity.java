@@ -1,9 +1,11 @@
 package com.factory.manual.ui.work;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -14,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.factory.manual.AppConfig;
 import com.factory.manual.BaseActivity;
 import com.factory.manual.Contants;
 import com.factory.manual.R;
@@ -92,7 +95,6 @@ public class WorkDetailActivity extends BaseActivity implements View.OnClickList
         recycleView.requestFocus();
         recycleView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recycleView.setAdapter(adapter);
-        ArrayList<String> strings = new ArrayList<>();
         ivBook.setOnClickListener(this);
         tv_go_work.setOnClickListener(this);
         getData();
@@ -117,6 +119,7 @@ public class WorkDetailActivity extends BaseActivity implements View.OnClickList
                 .subscribe(new NetObserver<BaseResultBean>() {
                     @Override
                     public void onSuccess(BaseResultBean response) {
+                        baseResultBean = response;
                         setDetail(response);
                     }
 
@@ -129,7 +132,7 @@ public class WorkDetailActivity extends BaseActivity implements View.OnClickList
 
     private void setDetail(BaseResultBean bean) {
         tv_task_title.setText(bean.getTitle());
-        tvState.setText(bean.getStatus());
+        tvState.setText(WorkUtil.getDetailState(bean.getStatus()));
 //        tvPeoples.setText();
         tvAddress.setText(bean.getAddress());
         tvPublishDate.setText(bean.getTime());
@@ -144,6 +147,21 @@ public class WorkDetailActivity extends BaseActivity implements View.OnClickList
         if (adapter.getData().size() == 0) {
             adapter.setEmptyView(getEmptyView());
         }
+
+        id_apply.setVisible(false);
+        id_error.setVisible(false);
+        id_pause.setVisible(false);
+        switch (bean.getStatus()) {
+            case "1":
+                id_apply.setVisible(false);
+                id_error.setVisible(false);
+                id_pause.setVisible(false);
+                break;
+            case "2":
+                tv_go_work.setText("重新启动");
+                break;
+        }
+
     }
 
 
@@ -151,15 +169,18 @@ public class WorkDetailActivity extends BaseActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_go_work:
+                if (tv_go_work.getText().equals("重新启动")) {
+                    restartWork();
+                } else {
+                    goWork();
+                }
             case R.id.iv_book:
-                goWork();
+                goBook();
                 break;
         }
     }
 
     private String getBookId() {
-        if (baseResultBean != null)
-            return baseResultBean.getName();
         return "9a1cdcfba6a641719edae9604a6049de";
     }
 
@@ -175,25 +196,54 @@ public class WorkDetailActivity extends BaseActivity implements View.OnClickList
         if (taskCount == -1 || TextUtils.isEmpty(bookId))
             return;
 
-        ModuleDetailActivity.enter(this, bookId, taskCount);
+        ModuleDetailActivity.enter(this, bookId, taskCount, id);
     }
+
+    private void goBook() {
+        String bookId = getBookId();
+        int taskCount = getTaskCount();
+        if (taskCount == -1 || TextUtils.isEmpty(bookId))
+            return;
+
+        ModuleDetailActivity.enter(this, bookId, taskCount, id);
+    }
+
+    private MenuItem id_apply, id_error, id_pause;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_work_detail, menu);
+        id_apply = menu.findItem(R.id.id_apply);
+        id_error = menu.findItem(R.id.id_error);
+        id_pause = menu.findItem(R.id.id_pause);
+
+        id_apply.setVisible(false);
+        id_error.setVisible(false);
+        id_pause.setVisible(false);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.id_apply:
+                apply();
+                break;
+            case R.id.id_error:
+                error();
+                break;
+            case R.id.id_pause:
+                pause();
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == Contants.REQUSET_DEFAULT_CODE && resultCode == Contants.CODE_REFRESH) {
-            getData();
-            setResult(Contants.CODE_REFRESH);
+            refreshDetail();
         }
     }
 
@@ -202,5 +252,88 @@ public class WorkDetailActivity extends BaseActivity implements View.OnClickList
             empty_view = getLayoutInflater().inflate(R.layout.layout_work_empty, null);
         }
         return empty_view;
+    }
+
+    private void apply() {
+
+    }
+
+    private void error() {
+        Intent intent = new Intent(this, WorkErrActivity.class);
+        intent.putExtra(Contants.B_id, id);
+        intent.putExtra(Contants.B_BEAN, baseResultBean);
+        startActivityForResult(intent, Contants.REQUSET_DEFAULT_CODE);
+    }
+
+    private void pause() {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("提示")
+                .setMessage("是否要暂停本项目?")
+                .setPositiveButton("暂停", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        pauseWork();
+                    }
+                }).setNeutralButton("取消", null).create();
+        dialog.show();
+    }
+
+    /**
+     * 暂停
+     */
+    private void pauseWork() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("cmd", CMD.pause);
+        map.put("id", id);
+        map.put("uid", AppConfig.uid);
+        RetrofitUtil.getInstance().getApi()
+                .getData(gson.toJson(map))
+                .compose(RxSchedulers.compose())
+                .compose(RxProgress.compose(this))
+                .compose(bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(new NetObserver<BaseResultBean>() {
+                    @Override
+                    public void onSuccess(BaseResultBean response) {
+                        toastMsg("任务已暂停");
+                        refreshDetail();
+                    }
+
+                    @Override
+                    public void onFail(String msg) {
+                        toastMsg(msg);
+                    }
+                });
+    }
+
+    /**
+     * 重启
+     */
+    private void restartWork() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("cmd", CMD.restart);
+        map.put("id", id);
+        map.put("uid", AppConfig.uid);
+        RetrofitUtil.getInstance().getApi()
+                .getData(gson.toJson(map))
+                .compose(RxSchedulers.compose())
+                .compose(RxProgress.compose(this))
+                .compose(bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(new NetObserver<BaseResultBean>() {
+                    @Override
+                    public void onSuccess(BaseResultBean response) {
+                        toastMsg("任务重启成功");
+                        refreshDetail();
+                    }
+
+                    @Override
+                    public void onFail(String msg) {
+                        toastMsg(msg);
+                    }
+                });
+    }
+
+    private void refreshDetail() {
+        getData();
+        setResult(Contants.CODE_REFRESH);
     }
 }

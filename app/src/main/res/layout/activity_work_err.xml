@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="当前操作"
+                android:text="当前进度"
                 android:textColor="@color/black_3"
                 android:textSize="15sp"
                 android:textStyle="bold"
@@ -76,14 +76,13 @@
 
 
             <TextView
-                android:id="@+id/tv_title"
+                android:id="@+id/tv_task_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginLeft="20dp"
                 android:ellipsize="end"
                 android:lines="1"
-                android:text="气象局项目"
                 android:textColor="@color/black_3"
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -100,13 +99,12 @@
                 android:layout_marginTop="10dp"
                 android:ellipsize="end"
                 android:lines="1"
-                android:text="气象局"
                 android:textColor="@color/black_3"
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toEndOf="@id/barrier"
-                app:layout_constraintTop_toBottomOf="@id/tv_title" />
+                app:layout_constraintTop_toBottomOf="@id/tv_task_title" />
 
 
             <TextView
@@ -118,7 +116,6 @@
                 android:layout_marginTop="10dp"
                 android:ellipsize="end"
                 android:lines="1"
-                android:text="张三"
                 android:textColor="@color/black_3"
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -136,7 +133,6 @@
                 android:layout_marginTop="10dp"
                 android:ellipsize="end"
                 android:lines="1"
-                android:text="第三步"
                 android:textColor="@color/black_3"
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -159,7 +155,7 @@
 
 
             <EditText
-                android:id="@+id/tv_reason"
+                android:id="@+id/et_reason"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -178,7 +174,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                app:layout_constraintTop_toBottomOf="@id/tv_reason" />
+                app:layout_constraintTop_toBottomOf="@id/et_reason" />
 
             <RadioGroup
                 android:id="@+id/gp_type"
@@ -189,18 +185,21 @@
                 app:layout_constraintTop_toBottomOf="@id/recycle_view">
 
                 <RadioButton
+                    android:id="@+id/rb_normal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="普通异常" />
 
                 <RadioButton
+                    android:id="@+id/rb_back"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="异常回退" />
 
                 <RadioButton
+                    android:id="@+id/rb_end"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -216,6 +215,7 @@
                 android:textColor="@color/black_3"
                 android:textSize="15sp"
                 android:textStyle="bold"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/gp_type" />
 
@@ -225,6 +225,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:entries="@array/progress_values"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/gp_type" />
 

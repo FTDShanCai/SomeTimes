@@ -11,17 +11,30 @@ import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.factory.manual.AppConfig;
 import com.factory.manual.BaseActivity;
 import com.factory.manual.BuildConfig;
+import com.factory.manual.Contants;
 import com.factory.manual.R;
 import com.factory.manual.adapter.CommentUpLoadImageAdapter;
+import com.factory.manual.api.CMD;
+import com.factory.manual.bean.BaseResultBean;
 import com.factory.manual.bean.UpLoadImage;
+import com.factory.manual.net.NetObserver;
+import com.factory.manual.net.RetrofitUtil;
+import com.factory.manual.net.RxProgress;
+import com.factory.manual.net.RxSchedulers;
 import com.factory.manual.util.PermissionTipsDialog;
 import com.factory.manual.util.PermissionsConfig;
+import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 import com.zxy.tiny.Tiny;
@@ -29,29 +42,68 @@ import com.zxy.tiny.callback.FileCallback;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 
 public class WorkErrActivity extends BaseActivity implements View.OnClickListener {
-
+    @BindView(R.id.tv_submit)
+    TextView tv_submit;
+    @BindView(R.id.et_reason)
+    EditText et_reason;
     @BindView(R.id.recycle_view)
     RecyclerView recyclerView;
+    @BindView(R.id.gp_type)
+    RadioGroup gp_type;
+    @BindView(R.id.tv_6)
+    TextView tv_6;
+    @BindView(R.id.spinner)
+    Spinner spinner;
+
+    @BindView(R.id.tv_task_title)
+    TextView tv_task_title;
+    @BindView(R.id.tv_address)
+    TextView tv_address;
+    @BindView(R.id.tv_peoples)
+    TextView tv_peoples;
+    @BindView(R.id.tv_progress)
+    TextView tv_progress;
+
     private final int REQUEST_CODE_CAPTURE_CAMEIA = 100;
     private final int REQUEST_CODE_PICK_IMAGE = 200;
 
     private List<UpLoadImage> imageList = new ArrayList<>();
     CommentUpLoadImageAdapter adapter;
     private BottomSheetDialog sheetDialog;
+    int submitType = 0;
+    private String id;
+    private BaseResultBean baseResultBean;
 
     @Override
     protected int getLayoutId() {
         return R.layout.activity_work_err;
     }
 
+    private void getIntentData() {
+        Intent intent = getIntent();
+        if (intent != null) {
+            id = intent.getStringExtra(Contants.B_id);
+            baseResultBean = (BaseResultBean) intent.getSerializableExtra(Contants.B_BEAN);
+        }
+
+        if (baseResultBean == null)
+            return;
+        tv_task_title.setText(baseResultBean.getTitle());
+        tv_address.setText(baseResultBean.getAddress());
+//         tv_peoples.setText(baseResultBean.ge);
+        tv_progress.setText("(" + baseResultBean.getNum() + "/" + baseResultBean.getNumber() + ")");
+    }
+
     @Override
     protected void initView() {
         initCommonTitle("异常提交");
+        getIntentData();
         adapter = new CommentUpLoadImageAdapter(imageList);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         recyclerView.setAdapter(adapter);
@@ -70,6 +122,36 @@ public class WorkErrActivity extends BaseActivity implements View.OnClickListene
                 }
             }
         });
+        tv_submit.setOnClickListener(this);
+
+        gp_type.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.rb_normal:
+                        submitType = 0;
+                        break;
+                    case R.id.rb_back:
+                        submitType = 1;
+                        break;
+                    case R.id.rb_end:
+                        submitType = 2;
+                        break;
+                }
+                onSubmitTypeChange();
+            }
+        });
+        onSubmitTypeChange();
+    }
+
+    private void onSubmitTypeChange() {
+        if (submitType == 1) {
+            tv_6.setVisibility(View.VISIBLE);
+            spinner.setVisibility(View.VISIBLE);
+        } else {
+            tv_6.setVisibility(View.GONE);
+            spinner.setVisibility(View.GONE);
+        }
     }
 
     private void showBottomSheet() {
@@ -161,6 +243,9 @@ public class WorkErrActivity extends BaseActivity implements View.OnClickListene
                         }).start();
 
                 break;
+            case R.id.tv_submit:
+                submit();
+                break;
         }
     }
 
@@ -203,6 +288,9 @@ public class WorkErrActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void uploadImg(File cameraFile) {
+
+//        addimg
+        
         UpLoadImage image = new UpLoadImage();
         image.setPath(cameraFile.getPath());
         image.setUploadurl("1");
@@ -213,27 +301,74 @@ public class WorkErrActivity extends BaseActivity implements View.OnClickListene
         } else {
             this.adapter.addData(adapter.getData().size() - 1, image);
         }
-//        List<File> files = new ArrayList<>();
-//        files.add(cameraFile);
-//        HashMap<String, String> map = new HashMap<>();
-//        map.put("evaluateType", "goods");
-//        MyHttpRequest.upLoadFiles(C.upLoadImg, this, map, "evaluteImage", files, new DialogCallback<LzyResponse<String>>(this, false) {
-//            @Override
-//            public void onSuccess(com.lzy.okgo.model.Response<LzyResponse<String>> response) {
-//                String url = response.body().resultData;
-//                Log.d("ftd", url);
-//                UpLoadImage image = new UpLoadImage();
-//                image.setPath(cameraFile.getPath());
-//                image.setUploadurl(url);
-//                if (adapter.getData().size() >= 4) {
-//                    images.remove(adapter.getData().size() - 1);
-//                    images.add(image);
-//                    OrderCommentActivity.this.adapter.notifyDataSetChanged();
-//                } else {
-//                    OrderCommentActivity.this.adapter.addData(adapter.getData().size() - 1, image);
-//                }
-//            }
-//        });
-
     }
+
+    private void submit() {
+        String reason = et_reason.getText().toString();
+        if (TextUtils.isEmpty(reason)) {
+            toastMsg("请输入异常描述");
+            return;
+        }
+
+        if (submitType == 0) {
+            submitNormal();
+        } else if (submitType == 1) {
+            submitBack();
+        } else {
+
+        }
+    }
+
+    private void submitNormal() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("cmd", CMD.saveException);
+        map.put("id", id);
+        map.put("uid", AppConfig.uid);
+        map.put("image", adapter.getUploadImgs());
+        RetrofitUtil.getInstance().getApi()
+                .getData(gson.toJson(map))
+                .compose(RxSchedulers.compose())
+                .compose(RxProgress.compose(this))
+                .compose(bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(new NetObserver<BaseResultBean>() {
+                    @Override
+                    public void onSuccess(BaseResultBean response) {
+                        toastMsg("提交成功");
+                        setResult(Contants.CODE_REFRESH);
+                        finish();
+                    }
+
+                    @Override
+                    public void onFail(String msg) {
+                        toastMsg(msg);
+                    }
+                });
+    }
+
+    private void submitBack() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("cmd", CMD.backException);
+        map.put("id", id);
+        map.put("uid", AppConfig.uid);
+        map.put("image", adapter.getUploadImgs());
+        RetrofitUtil.getInstance().getApi()
+                .getData(gson.toJson(map))
+                .compose(RxSchedulers.compose())
+                .compose(RxProgress.compose(this))
+                .compose(bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(new NetObserver<BaseResultBean>() {
+                    @Override
+                    public void onSuccess(BaseResultBean response) {
+                        toastMsg("提交成功");
+                        setResult(Contants.CODE_REFRESH);
+                        finish();
+                    }
+
+                    @Override
+                    public void onFail(String msg) {
+                        toastMsg(msg);
+                    }
+                });
+    }
+
 }

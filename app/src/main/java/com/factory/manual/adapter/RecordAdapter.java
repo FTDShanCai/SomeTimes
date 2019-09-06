@@ -9,6 +9,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.factory.manual.R;
 import com.factory.manual.bean.BaseResultBean;
+import com.factory.manual.ui.work.WorkUtil;
 
 import java.util.Random;
 
@@ -27,7 +28,8 @@ public class RecordAdapter extends BaseQuickAdapter<BaseResultBean.DataListBean,
         ImageView iv3 = helper.getView(R.id.iv_3);
         ConstraintLayout cl = helper.getView(R.id.cl);
         TextView tvDate = helper.getView(R.id.tv_date);
-
+//        getChildState
+        tvContent.setText(WorkUtil.getChildState(item.getStatus()));
         Random random = new Random();
         int i = random.nextInt(3);
         switch (i) {
