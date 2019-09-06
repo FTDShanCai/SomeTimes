@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.factory.manual.AppConfig;
 import com.factory.manual.BaseActivity;
+import com.factory.manual.Contants;
 import com.factory.manual.R;
 import com.factory.manual.adapter.HomeAdapter;
 import com.factory.manual.bean.HomeItem;
@@ -97,5 +98,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 startActivity(SubmitWorkActivity.class);
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(Contants.CODE_REFRESH);
+        super.onBackPressed();
     }
 }

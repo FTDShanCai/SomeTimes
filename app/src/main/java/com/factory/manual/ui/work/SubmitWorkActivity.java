@@ -186,7 +186,7 @@ public class SubmitWorkActivity extends BaseActivity implements View.OnClickList
                     sb.append(users.get(key));
                     sb.append(",");
                 }
-                sb.deleteCharAt(sb.length());
+                sb.deleteCharAt(sb.length()-1);
                 tv_peoples.setText(sb.toString());
             }
         }

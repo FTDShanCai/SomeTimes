@@ -1,12 +1,17 @@
 package com.factory.manual.ui.shouce;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.ContentLoadingProgressBar;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatDialog;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.factory.manual.BaseActivity;
@@ -26,7 +31,7 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 
-public class ModuleDetailActivity extends BaseActivity {
+public class ModuleDetailActivity extends BaseActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
 
     @BindView(R.id.view_page)
     ViewPager view_page;
@@ -38,16 +43,30 @@ public class ModuleDetailActivity extends BaseActivity {
     Button btn_next;
     @BindView(R.id.tv_content)
     TextView tv_content;
+    @BindView(R.id.iv_web)
+    ImageView iv_web;
+
 
     private PagerAdapter adapter;
 
     private ArrayList<Fragment> fragments = new ArrayList<>();
     private ArrayList<BaseResultBean.DataListBean> list = new ArrayList<>();
 
+    private boolean isWork = false;
+    private int workCount = -1;
+
     public static void enter(Context context, String id) {
         Intent intent = new Intent(context, ModuleDetailActivity.class);
         intent.putExtra(Contants.B_id, id);
         context.startActivity(intent);
+    }
+
+    public static void enter(Activity context, String id, int count) {
+        Intent intent = new Intent(context, ModuleDetailActivity.class);
+        intent.putExtra(Contants.B_id, id);
+        intent.putExtra(Contants.B_Count, count);
+        intent.putExtra(Contants.B_State, true);
+        context.startActivityForResult(intent, Contants.REQUSET_DEFAULT_CODE);
     }
 
     @Override
@@ -58,45 +77,14 @@ public class ModuleDetailActivity extends BaseActivity {
     @Override
     protected void initView() {
         bookid = getIntent().getStringExtra(Contants.B_id);
+        workCount = getIntent().getIntExtra(Contants.B_Count, -1);
+        isWork = getIntent().getBooleanExtra(Contants.B_State, false);
         initCommonTitle("模块详情");
-        view_page.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
+        btn_next.setVisibility(View.GONE);
 
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-                tv_progress.setText((i + 1) + "/" + fragments.size());
-                progress.setProgress(i + 1);
-                checkPage(i);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
-            }
-        });
-
-        btn_next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                switch (btn_next.getText().toString()) {
-                    case "下一步":
-                        int item = view_page.getCurrentItem();
-                        item++;
-                        view_page.setCurrentItem(item);
-                        break;
-                    case "完成":
-                        toastMsg("完成");
-                        finish();
-                        break;
-                }
-
-            }
-        });
-
+        view_page.addOnPageChangeListener(this);
+        btn_next.setOnClickListener(this);
+        iv_web.setOnClickListener(this);
         getDetail();
     }
 
@@ -123,11 +111,18 @@ public class ModuleDetailActivity extends BaseActivity {
                             return;
                         }
                         fragments.clear();
+                        int i = 0;
                         for (BaseResultBean.DataListBean bean : list) {
-                            fragments.add(ModuleFragment.newInstance(bean));
+                            fragments.add(ModuleFragment.newInstance(bean, i));
+                            i++;
                         }
                         adapter = new PagerAdapter(getSupportFragmentManager(), fragments);
                         view_page.setAdapter(adapter);
+
+                        tv_content.setVisibility(View.VISIBLE);
+                        tv_progress.setVisibility(View.VISIBLE);
+                        progress.setVisibility(View.VISIBLE);
+
                         progress.setMax(fragments.size());
                         progress.setProgress(1);
                         tv_progress.setText("1/" + fragments.size());
@@ -136,16 +131,98 @@ public class ModuleDetailActivity extends BaseActivity {
 
                     @Override
                     public void onFail(String msg) {
+                        toastMsg(msg);
                     }
                 });
     }
 
     private void checkPage(int page) {
+        if (isWork && page == workCount) {
+            btn_next.setVisibility(View.VISIBLE);
+        } else {
+            btn_next.setVisibility(View.GONE);
+        }
+        if (TextUtils.isEmpty(getCurrentData().getUrl())) {
+            iv_web.setVisibility(View.GONE);
+        } else {
+            iv_web.setVisibility(View.VISIBLE);
+        }
         tv_content.setText(list.get(page).getTitle());
         if (page == fragments.size() - 1) {
             btn_next.setText("完成");
         } else {
             btn_next.setText("下一步");
         }
+    }
+
+    public boolean isWork() {
+        return isWork;
+    }
+
+    public int getWorkCount() {
+        return workCount;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_content:
+                OnContent();
+                break;
+            case R.id.btn_next:
+                onBtnCLick();
+                break;
+            case R.id.iv_web:
+
+                break;
+        }
+    }
+
+    private BaseResultBean.DataListBean getCurrentData() {
+        int page = view_page.getCurrentItem();
+        return list.get(page);
+    }
+
+    private void OnContent() {
+        int page = view_page.getCurrentItem();
+        BaseResultBean.DataListBean bean = list.get(page);
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(bean.getTitle())
+                .setMessage(bean.getContent())
+                .setNeutralButton("确定", null).create();
+        dialog.show();
+    }
+
+    private void onBtnCLick() {
+        switch (btn_next.getText().toString()) {
+            case "下一步":
+                int item = view_page.getCurrentItem();
+                item++;
+                view_page.setCurrentItem(item);
+                setResult(Contants.CODE_REFRESH);
+                break;
+            case "完成":
+                toastMsg("完成");
+                setResult(Contants.CODE_REFRESH);
+                finish();
+                break;
+        }
+    }
+
+    @Override
+    public void onPageScrolled(int i, float v, int i1) {
+
+    }
+
+    @Override
+    public void onPageSelected(int i) {
+        tv_progress.setText((i + 1) + "/" + fragments.size());
+        progress.setProgress(i + 1);
+        checkPage(i);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int i) {
+
     }
 }

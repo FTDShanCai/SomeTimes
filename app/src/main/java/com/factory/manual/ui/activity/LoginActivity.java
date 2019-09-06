@@ -1,10 +1,14 @@
 package com.factory.manual.ui.activity;
 
+import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.factory.manual.AppConfig;
 import com.factory.manual.BaseActivity;
+import com.factory.manual.Contants;
 import com.factory.manual.R;
 import com.factory.manual.api.CMD;
 import com.factory.manual.bean.BaseResultBean;
@@ -15,6 +19,9 @@ import com.factory.manual.net.RxSchedulers;
 import com.gyf.barlibrary.ImmersionBar;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -25,6 +32,8 @@ public class LoginActivity extends BaseActivity {
     EditText et_account;
     @BindView(R.id.et_password)
     EditText et_password;
+    @BindView(R.id.tv_date)
+    TextView tv_date;
 
     @Override
     protected int getLayoutId() {
@@ -33,7 +42,9 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        tv_date.setText(sdf.format(calendar.getTime()));
     }
 
     @Override
@@ -70,7 +81,8 @@ public class LoginActivity extends BaseActivity {
                     public void onSuccess(BaseResultBean response) {
                         toastMsg("登录成功");
                         AppConfig.uid = response.getUid();
-                        startActivity(MainActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivityForResult(intent, Contants.REQUSET_DEFAULT_CODE);
                     }
 
                     @Override
@@ -78,6 +90,13 @@ public class LoginActivity extends BaseActivity {
                         toastMsg(msg);
                     }
                 });
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Contants.REQUSET_DEFAULT_CODE && resultCode == Contants.CODE_REFRESH) {
+            finish();
+        }
     }
 }

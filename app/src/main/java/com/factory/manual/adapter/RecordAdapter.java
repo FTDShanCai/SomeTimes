@@ -8,10 +8,11 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.factory.manual.R;
+import com.factory.manual.bean.BaseResultBean;
 
 import java.util.Random;
 
-public class RecordAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
+public class RecordAdapter extends BaseQuickAdapter<BaseResultBean.DataListBean, BaseViewHolder> {
 
 
     public RecordAdapter() {
@@ -19,7 +20,7 @@ public class RecordAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, String item) {
+    protected void convert(BaseViewHolder helper, BaseResultBean.DataListBean item) {
         TextView tvContent = helper.getView(R.id.tv_content);
         ImageView iv1 = helper.getView(R.id.iv_1);
         ImageView iv2 = helper.getView(R.id.iv_2);

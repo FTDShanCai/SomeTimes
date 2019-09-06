@@ -2,9 +2,14 @@ package com.factory.manual.ui.work;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -19,6 +24,7 @@ import com.factory.manual.net.NetObserver;
 import com.factory.manual.net.RetrofitUtil;
 import com.factory.manual.net.RxProgress;
 import com.factory.manual.net.RxSchedulers;
+import com.factory.manual.ui.shouce.ModuleDetailActivity;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 
 import java.util.ArrayList;
@@ -26,7 +32,7 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 
-public class WorkDetailActivity extends BaseActivity {
+public class WorkDetailActivity extends BaseActivity implements View.OnClickListener {
 
     @BindView(R.id.tv_state)
     TextView tvState;
@@ -52,9 +58,12 @@ public class WorkDetailActivity extends BaseActivity {
     RecyclerView recycleView;
     @BindView(R.id.tv_task_title)
     TextView tv_task_title;
+    @BindView(R.id.tv_go_work)
+    TextView tv_go_work;
     private String id;
-
+    private BaseResultBean baseResultBean;
     private RecordAdapter adapter = new RecordAdapter();
+    private View empty_view;
 
     public static void enter(Fragment fragment, String id) {
         Intent intent = new Intent(fragment.getActivity(), WorkDetailActivity.class);
@@ -84,10 +93,8 @@ public class WorkDetailActivity extends BaseActivity {
         recycleView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recycleView.setAdapter(adapter);
         ArrayList<String> strings = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            strings.add("");
-        }
-        adapter.setNewData(strings);
+        ivBook.setOnClickListener(this);
+        tv_go_work.setOnClickListener(this);
         getData();
     }
 
@@ -130,8 +137,70 @@ public class WorkDetailActivity extends BaseActivity {
         tvContent.setText(bean.getContent());
         progress.setMax(Integer.parseInt(bean.getNumber()));
         progress.setProgress(Integer.parseInt(bean.getNum()));
+
+        tvNowCount.setText("当前进度(" + bean.getNum() + "/" + bean.getNumber() + ")");
 //        tvEndDate.setText();
+        adapter.setNewData(bean.getDataList());
+        if (adapter.getData().size() == 0) {
+            adapter.setEmptyView(getEmptyView());
+        }
     }
 
-    
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_go_work:
+            case R.id.iv_book:
+                goWork();
+                break;
+        }
+    }
+
+    private String getBookId() {
+        if (baseResultBean != null)
+            return baseResultBean.getName();
+        return "9a1cdcfba6a641719edae9604a6049de";
+    }
+
+    private int getTaskCount() {
+        if (baseResultBean != null)
+            return Integer.parseInt(baseResultBean.getNum());
+        return 0;
+    }
+
+    private void goWork() {
+        String bookId = getBookId();
+        int taskCount = getTaskCount();
+        if (taskCount == -1 || TextUtils.isEmpty(bookId))
+            return;
+
+        ModuleDetailActivity.enter(this, bookId, taskCount);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_work_detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == Contants.REQUSET_DEFAULT_CODE && resultCode == Contants.CODE_REFRESH) {
+            getData();
+            setResult(Contants.CODE_REFRESH);
+        }
+    }
+
+    private View getEmptyView() {
+        if (empty_view == null) {
+            empty_view = getLayoutInflater().inflate(R.layout.layout_work_empty, null);
+        }
+        return empty_view;
+    }
 }

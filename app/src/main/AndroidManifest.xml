@@ -13,36 +13,58 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.work.ApplyDetailActivity"></activity>
-        <activity android:name=".ui.work.ApplyActivity" >
+        <activity
+            android:name=".ui.work.ApplyDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.work.ApplyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.work.WorkErrActivity"
+            android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".ui.work.WorkErrActivity">
+        <activity
+            android:name=".ui.work.WorkDetailActivity"
+            android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".ui.work.WorkDetailActivity" >
+        <activity
+            android:name=".ui.work.WorkListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.work.SubmitWorkActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.PeoplesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.shouce.ModuleDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.shouce.ModuleOneActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.shouce.ModuleTwoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.activity.LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.work.WorkListActivity" />
-        <activity android:name=".ui.work.SubmitWorkActivity" />
-        <activity android:name=".ui.activity.PeoplesActivity" />
-        <activity android:name=".ui.shouce.ModuleDetailActivity" />
-        <activity android:name=".ui.shouce.ModuleOneActivity" />
-        <activity android:name=".ui.shouce.ModuleTwoActivity" />
-        <activity
-            android:name=".ui.activity.MainActivity"
-            android:label="@string/title_activity_main"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.activity.LoginActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

@@ -143,7 +143,7 @@ public class ModuleOneActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Contants.REQUSET_DEFAULT_CODE && resultCode == Contants.CODE_REFRESH && data != null) {
             String id = data.getStringExtra(Contants.B_id);
-            if (TextUtils.isEmpty(id) && isSelect) {
+            if (!TextUtils.isEmpty(id) && isSelect) {
                 setResult(Contants.CODE_REFRESH, data);
                 finish();
             }

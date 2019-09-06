@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/id_error"
+        android:title="异常"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/id_apply"
+        android:title="审批"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/id_pause"
+        android:title="暂停"
+        app:showAsAction="never" />
+</menu>

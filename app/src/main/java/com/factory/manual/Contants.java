@@ -20,8 +20,10 @@ public class Contants {
     public static final String B_PASSWORD = "password";
     public static final String B_BEAN = "bean";
     public static final String B_NAME = "name";
+    public static final String B_Index= "index";
 
     public static final String B_id = "id";
+    public static final String B_Count = "b_count";
 
     public static final String B_POSITION = "position";
     public static final String SP_UID = "uid"; //uid
@@ -39,5 +41,5 @@ public class Contants {
      */
     public static final int CODE_REFRESH = 168;
 
-    public static String B_State="state";
+    public static String B_State = "state";
 }

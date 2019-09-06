@@ -26,10 +26,12 @@ public class ModuleFragment extends BaseFragment {
 
     private ImageAdapter adapter;
     private List<String> list = new ArrayList<>();
+    private int index;
 
-    public static ModuleFragment newInstance(BaseResultBean.DataListBean bean) {
+    public static ModuleFragment newInstance(BaseResultBean.DataListBean bean, int index) {
         Bundle args = new Bundle();
         args.putSerializable(Contants.B_BEAN, bean);
+        args.putSerializable(Contants.B_Index, index);
         ModuleFragment fragment = new ModuleFragment();
         fragment.setArguments(args);
         return fragment;
@@ -45,6 +47,7 @@ public class ModuleFragment extends BaseFragment {
     @Override
     protected void initViews(Bundle savedInstanceState) {
         bean = (BaseResultBean.DataListBean) getArguments().get(Contants.B_BEAN);
+        index = getArguments().getInt(Contants.B_Index);
         adapter = new ImageAdapter(list);
         recycle_view.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         recycle_view.setAdapter(adapter);
