@@ -20,6 +20,7 @@ public class HomeItem {
 
     public static enum Type {
         知识手册,
-        任务管理
+        任务管理,
+        审批列表
     }
 }

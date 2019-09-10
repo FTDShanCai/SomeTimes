@@ -14,6 +14,7 @@ import com.factory.manual.R;
 import com.factory.manual.adapter.HomeAdapter;
 import com.factory.manual.bean.HomeItem;
 import com.factory.manual.ui.shouce.ModuleOneActivity;
+import com.factory.manual.ui.work.ApplyActivity;
 import com.factory.manual.ui.work.SubmitWorkActivity;
 import com.factory.manual.ui.work.WorkListActivity;
 import com.gyf.barlibrary.ImmersionBar;
@@ -57,6 +58,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         ArrayList<HomeItem> list = new ArrayList<>();
         list.add(new HomeItem("知识手册", R.mipmap.ic_shop_home_ddgl, HomeItem.Type.知识手册, "查询日常操作流程"));
         list.add(new HomeItem("任务管理", R.mipmap.ic_shop_home_jsgl, HomeItem.Type.任务管理, "当前部门分配任务"));
+        list.add(new HomeItem("审批列表", R.mipmap.ic_shop_home_hxjl, HomeItem.Type.审批列表, "审批申请"));
         providerShopItems(list);
     }
 
@@ -75,6 +77,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                             break;
                         case 任务管理:
                             startActivity(WorkListActivity.class);
+                            break;
+                        case 审批列表:
+                            startActivity(ApplyActivity.class);
                             break;
                     }
                 }

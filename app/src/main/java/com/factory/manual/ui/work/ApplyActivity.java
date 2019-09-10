@@ -10,6 +10,7 @@ import com.factory.manual.AppConfig;
 import com.factory.manual.BaseActivity;
 import com.factory.manual.R;
 import com.factory.manual.adapter.ApplyAdater;
+import com.factory.manual.api.CMD;
 import com.factory.manual.bean.BaseResultBean;
 import com.factory.manual.net.NetObserver;
 import com.factory.manual.net.RetrofitUtil;
@@ -47,7 +48,7 @@ public class ApplyActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 BaseResultBean.DataListBean bean = (BaseResultBean.DataListBean) adapter.getData().get(position);
-                ApplyDetailActivity.enter(ApplyActivity.this);
+                ApplyDetailActivity.enter(ApplyActivity.this, bean.getId());
             }
         });
         refresh_layout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
@@ -62,12 +63,7 @@ public class ApplyActivity extends BaseActivity {
             }
         });
         refresh_layout.setEnableLoadMore(false);
-//        refresh_layout.autoRefresh();
-        ArrayList<BaseResultBean.DataListBean> dataListBeans = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            dataListBeans.add(new BaseResultBean.DataListBean());
-        }
-        adapter.setNewData(dataListBeans);
+        refresh_layout.autoRefresh();
     }
 
     private int page = 1;
@@ -78,7 +74,7 @@ public class ApplyActivity extends BaseActivity {
             page = 1;
         }
         HashMap<String, String> map = new HashMap<>();
-        map.put("cmd", "");
+        map.put("cmd", CMD.getShenWorkList);
         map.put("uid", AppConfig.uid);
         map.put("nowPage", page + "");
         map.put("pageCount", pageCount + "");
