@@ -133,7 +133,7 @@ public class WorkDetailActivity extends BaseActivity implements View.OnClickList
     private void setDetail(BaseResultBean bean) {
         tv_task_title.setText(bean.getTitle());
         tvState.setText(WorkUtil.getDetailState(bean.getStatus()));
-//        tvPeoples.setText();
+        tvPeoples.setText(bean.getName());
         tvAddress.setText(bean.getAddress());
         tvPublishDate.setText(bean.getTime());
         tvTaskEndDate.setText(bean.getEndTime());
@@ -153,9 +153,9 @@ public class WorkDetailActivity extends BaseActivity implements View.OnClickList
         id_pause.setVisible(false);
         switch (bean.getStatus()) {
             case "1":
-                id_apply.setVisible(false);
-                id_error.setVisible(false);
-                id_pause.setVisible(false);
+                id_apply.setVisible(true);
+                id_error.setVisible(true);
+                id_pause.setVisible(true);
                 break;
             case "2":
                 tv_go_work.setText("重新启动");
@@ -174,8 +174,9 @@ public class WorkDetailActivity extends BaseActivity implements View.OnClickList
                 } else {
                     goWork();
                 }
+                break;
             case R.id.iv_book:
-                goBook();
+                goWork();
                 break;
         }
     }
@@ -191,15 +192,6 @@ public class WorkDetailActivity extends BaseActivity implements View.OnClickList
     }
 
     private void goWork() {
-        String bookId = getBookId();
-        int taskCount = getTaskCount();
-        if (taskCount == -1 || TextUtils.isEmpty(bookId))
-            return;
-
-        ModuleDetailActivity.enter(this, bookId, taskCount, id);
-    }
-
-    private void goBook() {
         String bookId = getBookId();
         int taskCount = getTaskCount();
         if (taskCount == -1 || TextUtils.isEmpty(bookId))
@@ -255,7 +247,10 @@ public class WorkDetailActivity extends BaseActivity implements View.OnClickList
     }
 
     private void apply() {
-
+        Intent intent = new Intent(this, ApplySubmitActivity.class);
+        intent.putExtra(Contants.B_id, id);
+        intent.putExtra(Contants.B_BEAN, baseResultBean);
+        startActivityForResult(intent, Contants.REQUSET_DEFAULT_CODE);
     }
 
     private void error() {

@@ -8,6 +8,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.factory.manual.R;
 import com.factory.manual.bean.BaseResultBean;
+import com.factory.manual.ui.work.WorkUtil;
 import com.factory.manual.util.GlideUtil;
 
 
@@ -29,6 +30,9 @@ public class WorkListAdapter extends BaseQuickAdapter<BaseResultBean.DataListBea
         tv_title.setText(item.getName());
         GlideUtil.load(mContext, item.getImage(), iv_img);
         tv_content.setText(item.getContent());
+        tv_state.setText(WorkUtil.getDetailState(item.getStatus()));
+
+        tv_peoples.setText(item.getName());
 
     }
 }
