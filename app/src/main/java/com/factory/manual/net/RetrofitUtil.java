@@ -65,4 +65,13 @@ public class RetrofitUtil {
         // MultipartBody.Part借助文件名完成最终的上传
         return MultipartBody.Part.createFormData(partName, file.getName(), requestFile);
     }
+
+    @NonNull
+    public static MultipartBody.Part prepareFilePart(String partName ,File file) {
+        // 为file建立RequestBody实例
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("image/png"), file);
+        // MultipartBody.Part借助文件名完成最终的上传
+        return MultipartBody.Part.createFormData(partName, file.getName(), requestFile);
+    }
 }

@@ -13,6 +13,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -46,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
+import okhttp3.MultipartBody;
 
 public class WorkErrActivity extends BaseActivity implements View.OnClickListener {
     @BindView(R.id.tv_submit)
@@ -98,6 +100,14 @@ public class WorkErrActivity extends BaseActivity implements View.OnClickListene
         tv_address.setText(baseResultBean.getAddress());
 //         tv_peoples.setText(baseResultBean.ge);
         tv_progress.setText("(" + baseResultBean.getNum() + "/" + baseResultBean.getNumber() + ")");
+
+      ArrayList<BaseResultBean.DataListBean> listBeans =   baseResultBean.getChildBookList();
+      String [] strings = new String[listBeans.size()];
+      for (int i=0;i<listBeans.size();i++){
+          strings[i]=i+"";
+      }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_expandable_list_item_1,strings);
+        spinner.setAdapter(adapter);
     }
 
     @Override
@@ -288,19 +298,33 @@ public class WorkErrActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void uploadImg(File cameraFile) {
+        MultipartBody.Part file =  RetrofitUtil.prepareFilePart("file", cameraFile);
+        HashMap<String,String> map = new HashMap<>();
+        RetrofitUtil.getInstance().getApi().addimg(map,file)
+                .compose(RxSchedulers.<BaseResultBean>compose())
+                .compose(RxProgress.<BaseResultBean>compose(this))
+                .compose(bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(new NetObserver<BaseResultBean>() {
+                    @Override
+                    public void onSuccess(BaseResultBean response) {
+                        UpLoadImage image = new UpLoadImage();
+                        image.setPath(cameraFile.getPath());
+                        image.setUploadurl(response.getObject());
+                        if (adapter.getData().size() >= 3) {
+                            imageList.remove(adapter.getData().size() - 1);
+                            imageList.add(image);
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            adapter.addData(adapter.getData().size() - 1, image);
+                        }
+                    }
 
-//        addimg
-        
-        UpLoadImage image = new UpLoadImage();
-        image.setPath(cameraFile.getPath());
-        image.setUploadurl("1");
-        if (adapter.getData().size() >= 3) {
-            imageList.remove(adapter.getData().size() - 1);
-            imageList.add(image);
-            this.adapter.notifyDataSetChanged();
-        } else {
-            this.adapter.addData(adapter.getData().size() - 1, image);
-        }
+                    @Override
+                    public void onFail(String msg) {
+                        toastMsg(msg);
+                    }
+                });
+
     }
 
     private void submit() {
@@ -315,7 +339,7 @@ public class WorkErrActivity extends BaseActivity implements View.OnClickListene
         } else if (submitType == 1) {
             submitBack();
         } else {
-
+            submitBackErr();
         }
     }
 
@@ -346,9 +370,37 @@ public class WorkErrActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void submitBack() {
+        String backid= baseResultBean.getChildBookList().get(spinner.getSelectedItemPosition()).getId();
         HashMap<String, String> map = new HashMap<>();
         map.put("cmd", CMD.backException);
-        map.put("id", id);
+        map.put("id", backid);
+        map.put("uid", AppConfig.uid);
+        map.put("image", adapter.getUploadImgs());
+        RetrofitUtil.getInstance().getApi()
+                .getData(gson.toJson(map))
+                .compose(RxSchedulers.compose())
+                .compose(RxProgress.compose(this))
+                .compose(bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(new NetObserver<BaseResultBean>() {
+                    @Override
+                    public void onSuccess(BaseResultBean response) {
+                        toastMsg("提交成功");
+                        setResult(Contants.CODE_REFRESH);
+                        finish();
+                    }
+
+                    @Override
+                    public void onFail(String msg) {
+                        toastMsg(msg);
+                    }
+                });
+    }
+
+    private void submitBackErr() {
+        String backid= baseResultBean.getChildBookList().get(baseResultBean.getChildBookList().size()-1).getId();
+        HashMap<String, String> map = new HashMap<>();
+        map.put("cmd", CMD.backException);
+        map.put("id", backid);
         map.put("uid", AppConfig.uid);
         map.put("image", adapter.getUploadImgs());
         RetrofitUtil.getInstance().getApi()

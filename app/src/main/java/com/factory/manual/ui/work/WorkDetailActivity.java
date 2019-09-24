@@ -30,7 +30,6 @@ import com.factory.manual.net.RxSchedulers;
 import com.factory.manual.ui.shouce.ModuleDetailActivity;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -156,6 +155,7 @@ public class WorkDetailActivity extends BaseActivity implements View.OnClickList
                 id_apply.setVisible(true);
                 id_error.setVisible(true);
                 id_pause.setVisible(true);
+                tv_go_work.setText("开始工作");
                 break;
             case "2":
                 tv_go_work.setText("重新启动");
@@ -182,7 +182,7 @@ public class WorkDetailActivity extends BaseActivity implements View.OnClickList
     }
 
     private String getBookId() {
-        return "9a1cdcfba6a641719edae9604a6049de";
+        return baseResultBean.getBookId();
     }
 
     private int getTaskCount() {
@@ -190,14 +190,19 @@ public class WorkDetailActivity extends BaseActivity implements View.OnClickList
             return Integer.parseInt(baseResultBean.getNum());
         return 0;
     }
+    private String getCurrentId(){
+        if (baseResultBean != null&&baseResultBean.getChildBookList()!=null&&baseResultBean.getChildBookList().size()!=0)
+            return baseResultBean.getChildBookList().get(Integer.parseInt(baseResultBean.getNum())).getId();
+        return "";
+    }
 
     private void goWork() {
         String bookId = getBookId();
         int taskCount = getTaskCount();
         if (taskCount == -1 || TextUtils.isEmpty(bookId))
             return;
-
-        ModuleDetailActivity.enter(this, bookId, taskCount, id);
+        boolean state= baseResultBean.getStatus().equals("1");
+        ModuleDetailActivity.enter(this, baseResultBean.getChildBookList(), taskCount, getCurrentId(),state);
     }
 
     private MenuItem id_apply, id_error, id_pause;
@@ -248,14 +253,14 @@ public class WorkDetailActivity extends BaseActivity implements View.OnClickList
 
     private void apply() {
         Intent intent = new Intent(this, ApplySubmitActivity.class);
-        intent.putExtra(Contants.B_id, id);
+        intent.putExtra(Contants.B_id, getCurrentId());
         intent.putExtra(Contants.B_BEAN, baseResultBean);
         startActivityForResult(intent, Contants.REQUSET_DEFAULT_CODE);
     }
 
     private void error() {
         Intent intent = new Intent(this, WorkErrActivity.class);
-        intent.putExtra(Contants.B_id, id);
+        intent.putExtra(Contants.B_id, getCurrentId());
         intent.putExtra(Contants.B_BEAN, baseResultBean);
         startActivityForResult(intent, Contants.REQUSET_DEFAULT_CODE);
     }
@@ -279,7 +284,7 @@ public class WorkDetailActivity extends BaseActivity implements View.OnClickList
     private void pauseWork() {
         HashMap<String, String> map = new HashMap<>();
         map.put("cmd", CMD.pause);
-        map.put("id", id);
+        map.put("id", getCurrentId());
         map.put("uid", AppConfig.uid);
         RetrofitUtil.getInstance().getApi()
                 .getData(gson.toJson(map))
@@ -306,7 +311,7 @@ public class WorkDetailActivity extends BaseActivity implements View.OnClickList
     private void restartWork() {
         HashMap<String, String> map = new HashMap<>();
         map.put("cmd", CMD.restart);
-        map.put("id", id);
+        map.put("id", getCurrentId());
         map.put("uid", AppConfig.uid);
         RetrofitUtil.getInstance().getApi()
                 .getData(gson.toJson(map))

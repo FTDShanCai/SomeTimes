@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatDialog;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -63,11 +62,11 @@ public class ModuleDetailActivity extends BaseActivity implements View.OnClickLi
         context.startActivity(intent);
     }
 
-    public static void enter(Activity context, String id, int count, String taskId) {
+    public static void enter(Activity context, ArrayList<BaseResultBean.DataListBean> list, int count, String taskId, boolean state) {
         Intent intent = new Intent(context, ModuleDetailActivity.class);
-        intent.putExtra(Contants.B_id, id);
+        intent.putExtra(Contants.B_List, list);
         intent.putExtra(Contants.B_Count, count);
-        intent.putExtra(Contants.B_State, true);
+        intent.putExtra(Contants.B_State, state);
         intent.putExtra(Contants.B_Task_Id, taskId);
         context.startActivityForResult(intent, Contants.REQUSET_DEFAULT_CODE);
     }
@@ -80,6 +79,9 @@ public class ModuleDetailActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void initView() {
         bookid = getIntent().getStringExtra(Contants.B_id);
+        if (TextUtils.isEmpty(bookid)){
+            list = (ArrayList<BaseResultBean.DataListBean>) getIntent().getSerializableExtra(Contants.B_List);
+        }
         workCount = getIntent().getIntExtra(Contants.B_Count, -1);
         isWork = getIntent().getBooleanExtra(Contants.B_State, false);
         taskId = getIntent().getStringExtra(Contants.B_Task_Id);
@@ -90,7 +92,11 @@ public class ModuleDetailActivity extends BaseActivity implements View.OnClickLi
         view_page.addOnPageChangeListener(this);
         btn_next.setOnClickListener(this);
         iv_web.setOnClickListener(this);
-        getDetail();
+        if (!TextUtils.isEmpty(bookid)){
+            getDetail();
+        }else{
+            initList();
+        }
     }
 
     String bookid;
@@ -111,27 +117,7 @@ public class ModuleDetailActivity extends BaseActivity implements View.OnClickLi
                         if (response.getDataList() != null) {
                             list.addAll(response.getDataList());
                         }
-                        if (list == null || list.size() == 0) {
-                            toastMsg("模块详情暂无数据");
-                            return;
-                        }
-                        fragments.clear();
-                        int i = 0;
-                        for (BaseResultBean.DataListBean bean : list) {
-                            fragments.add(ModuleFragment.newInstance(bean, i));
-                            i++;
-                        }
-                        adapter = new PagerAdapter(getSupportFragmentManager(), fragments);
-                        view_page.setAdapter(adapter);
-
-                        tv_content.setVisibility(View.VISIBLE);
-                        tv_progress.setVisibility(View.VISIBLE);
-                        progress.setVisibility(View.VISIBLE);
-
-                        progress.setMax(fragments.size());
-                        progress.setProgress(1);
-                        tv_progress.setText("1/" + fragments.size());
-                        checkPage(0);
+                        initList();
                     }
 
                     @Override
@@ -139,6 +125,30 @@ public class ModuleDetailActivity extends BaseActivity implements View.OnClickLi
                         toastMsg(msg);
                     }
                 });
+    }
+    private void initList(){
+        if (list == null || list.size() == 0) {
+            toastMsg("模块详情暂无数据");
+            return;
+        }
+        if (workCount==-1)workCount=0;
+        fragments.clear();
+        int i = 0;
+        for (BaseResultBean.DataListBean bean : list) {
+            fragments.add(ModuleFragment.newInstance(bean, i));
+            i++;
+        }
+        adapter = new PagerAdapter(getSupportFragmentManager(), fragments);
+        view_page.setAdapter(adapter);
+
+        tv_content.setVisibility(View.VISIBLE);
+        tv_progress.setVisibility(View.VISIBLE);
+        progress.setVisibility(View.VISIBLE);
+
+        progress.setMax(fragments.size());
+        progress.setProgress(1);
+        tv_progress.setText((workCount+1)+"/" + fragments.size());
+        checkPage(workCount);
     }
 
     private void checkPage(int page) {
@@ -225,11 +235,16 @@ public class ModuleDetailActivity extends BaseActivity implements View.OnClickLi
     public void onPageScrollStateChanged(int i) {
 
     }
+    private String getSelectId(){
+        if (list!=null&&list.size()!=0&&workCount!=-1)
+        return list.get(workCount).getId();
+        return "";
+    }
 
     private void next() {
         HashMap<String, String> map = new HashMap<>();
         map.put("cmd", CMD.next);
-        map.put("id", taskId);
+        map.put("id", getSelectId());
         map.put("uid", AppConfig.uid);
         RetrofitUtil.getInstance().getApi()
                 .getData(gson.toJson(map))
@@ -241,6 +256,7 @@ public class ModuleDetailActivity extends BaseActivity implements View.OnClickLi
                     public void onSuccess(BaseResultBean response) {
                         int item = view_page.getCurrentItem();
                         item++;
+                        workCount++;
                         view_page.setCurrentItem(item);
                         setResult(Contants.CODE_REFRESH);
                     }
@@ -256,7 +272,7 @@ public class ModuleDetailActivity extends BaseActivity implements View.OnClickLi
     private void taskFinish() {
         HashMap<String, String> map = new HashMap<>();
         map.put("cmd", CMD.next);
-        map.put("id", taskId);
+        map.put("id", getSelectId());
         map.put("uid", AppConfig.uid);
         RetrofitUtil.getInstance().getApi()
                 .getData(gson.toJson(map))

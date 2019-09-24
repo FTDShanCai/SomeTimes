@@ -8,6 +8,7 @@ public class BaseResultBean implements Serializable {
     private String resultNote;
     private int totalPage;
     private ArrayList<DataListBean> dataList;
+    private ArrayList<DataListBean> childBookList;
     private ArrayList<List> list;
     private String uid;
     private String name;
@@ -19,6 +20,32 @@ public class BaseResultBean implements Serializable {
     private String content;
     private String number;
     private String num;
+    private String object;
+    private String bookId;
+
+    public String getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
+    }
+
+    public ArrayList<DataListBean> getChildBookList() {
+        return childBookList;
+    }
+
+    public void setChildBookList(ArrayList<DataListBean> childBookList) {
+        this.childBookList = childBookList;
+    }
+
+    public String getObject() {
+        return object;
+    }
+
+    public void setObject(String object) {
+        this.object = object;
+    }
 
     public String getName() {
         return name;
@@ -153,6 +180,15 @@ public class BaseResultBean implements Serializable {
         private String flag;//1主管
         private String content;
         private String status;//1：未开始2:已完成3：暂停4：重启5：上报6：审批成功7：审批失败8：异常9：异常回退10：异常结束11:已转交
+        private String time;
+
+        public String getTime() {
+            return time;
+        }
+
+        public void setTime(String time) {
+            this.time = time;
+        }
 
         public String getContent() {
             return content;

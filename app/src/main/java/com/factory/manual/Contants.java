@@ -21,6 +21,7 @@ public class Contants {
     public static final String B_BEAN = "bean";
     public static final String B_NAME = "name";
     public static final String B_Index = "index";
+    public static final String B_List = "list";
 
     public static final String B_id = "id";
     public static final String B_Count = "b_count";

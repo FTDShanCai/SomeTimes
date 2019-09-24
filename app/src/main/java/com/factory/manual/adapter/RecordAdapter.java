@@ -9,9 +9,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.factory.manual.R;
 import com.factory.manual.bean.BaseResultBean;
-import com.factory.manual.ui.work.WorkUtil;
-
-import java.util.Random;
+import com.factory.manual.util.GlideUtil;
 
 public class RecordAdapter extends BaseQuickAdapter<BaseResultBean.DataListBean, BaseViewHolder> {
 
@@ -29,10 +27,10 @@ public class RecordAdapter extends BaseQuickAdapter<BaseResultBean.DataListBean,
         ConstraintLayout cl = helper.getView(R.id.cl);
         TextView tvDate = helper.getView(R.id.tv_date);
 //        getChildState
-        tvContent.setText(WorkUtil.getChildState(item.getStatus()));
-        Random random = new Random();
-        int i = random.nextInt(3);
-        switch (i) {
+//        WorkUtil.getChildState(item.getStatus())
+        tvContent.setText(item.getName() + item.getContent());
+        tvDate.setText(item.getTime());
+        switch ( item.getImages().size()) {
             case 0:
                 cl.setVisibility(View.GONE);
                 break;
@@ -41,18 +39,24 @@ public class RecordAdapter extends BaseQuickAdapter<BaseResultBean.DataListBean,
                 iv1.setVisibility(View.VISIBLE);
                 iv2.setVisibility(View.INVISIBLE);
                 iv3.setVisibility(View.INVISIBLE);
+                GlideUtil.load(mContext,item.getImages().get(0),iv1);
                 break;
             case 2:
                 cl.setVisibility(View.VISIBLE);
                 iv1.setVisibility(View.VISIBLE);
                 iv2.setVisibility(View.VISIBLE);
                 iv3.setVisibility(View.INVISIBLE);
+                GlideUtil.load(mContext,item.getImages().get(0),iv1);
+                GlideUtil.load(mContext,item.getImages().get(1),iv2);
                 break;
             case 3:
                 cl.setVisibility(View.VISIBLE);
                 iv1.setVisibility(View.VISIBLE);
                 iv2.setVisibility(View.VISIBLE);
                 iv3.setVisibility(View.VISIBLE);
+                GlideUtil.load(mContext,item.getImages().get(0),iv1);
+                GlideUtil.load(mContext,item.getImages().get(1),iv2);
+                GlideUtil.load(mContext,item.getImages().get(2),iv3);
                 break;
         }
 
