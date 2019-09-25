@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.factory.manual.App;
 import com.factory.manual.AppConfig;
 import com.factory.manual.BaseActivity;
 import com.factory.manual.Contants;
@@ -30,6 +31,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     TextView tv_peoples;
     @BindView(R.id.tv_submit_work)
     TextView tv_submit_work;
+    @BindView(R.id.tv_title)
+    TextView tv_title;
+    @BindView(R.id.tv_type)
+    TextView tv_type;
 
     @Override
     protected int getLayoutId() {
@@ -39,7 +44,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void initView() {
         initDatas();
-
+        tv_title.setText(AppConfig.name);
+        tv_type.setText(AppConfig.positionName);
         tv_peoples.setOnClickListener(this);
         tv_submit_work.setOnClickListener(this);
     }
@@ -58,7 +64,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         ArrayList<HomeItem> list = new ArrayList<>();
         list.add(new HomeItem("知识手册", R.mipmap.ic_shop_home_ddgl, HomeItem.Type.知识手册, "查询日常操作流程"));
         list.add(new HomeItem("任务管理", R.mipmap.ic_shop_home_jsgl, HomeItem.Type.任务管理, "当前部门分配任务"));
-        list.add(new HomeItem("审批列表", R.mipmap.ic_shop_home_hxjl, HomeItem.Type.审批列表, "审批申请"));
+        if ("1".equals(AppConfig.isZG))
+            list.add(new HomeItem("审批列表", R.mipmap.ic_shop_home_hxjl, HomeItem.Type.审批列表, "审批申请"));
         providerShopItems(list);
     }
 
@@ -93,7 +100,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_peoples:
-                PeoplesActivity.enter(this, "");
+                PeoplesActivity.enter(this, AppConfig.parentid);
                 break;
             case R.id.tv_submit_work:
                 if (TextUtils.isEmpty(AppConfig.parentid)) {

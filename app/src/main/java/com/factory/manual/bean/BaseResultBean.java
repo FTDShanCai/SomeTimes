@@ -22,6 +22,34 @@ public class BaseResultBean implements Serializable {
     private String num;
     private String object;
     private String bookId;
+    private String positionId;
+
+    private String positionName;
+    private String flag;
+
+    public String getPositionName() {
+        return positionName;
+    }
+
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
+    }
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
+
+    public String getPositionId() {
+        return positionId;
+    }
+
+    public void setPositionId(String positionId) {
+        this.positionId = positionId;
+    }
 
     public String getBookId() {
         return bookId;

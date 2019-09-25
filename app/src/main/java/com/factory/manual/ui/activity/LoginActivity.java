@@ -81,6 +81,10 @@ public class LoginActivity extends BaseActivity {
                     public void onSuccess(BaseResultBean response) {
                         toastMsg("登录成功");
                         AppConfig.uid = response.getUid();
+                        AppConfig.parentid = response.getPositionId();
+                        AppConfig.positionName = response.getPositionName();
+                        AppConfig.name = response.getName();
+                        AppConfig.isZG = response.getFlag();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivityForResult(intent, Contants.REQUSET_DEFAULT_CODE);
                     }
